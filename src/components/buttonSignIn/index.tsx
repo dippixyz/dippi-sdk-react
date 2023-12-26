@@ -1,16 +1,20 @@
-// import { useState } from 'react';
-import React , { useState } from 'react' ;
+// import React, { useState } from 'react';
+import React from 'react';
 import {  SignInForm } from '../SignIn';
+// import ReactDOM from 'react-dom';
+// interface propActiveTab {
+//     activeTab: boolean;
+// }
 
-export const ButtonSignIn: React.FC= () => {
- 
-    const [activeTab, setActiveTab] = useState(false);
+const ButtonSignIn: React.FC =  () => {
+    const [activeTab, setactiveTab] = React.useState(false);
     const handleTabClick = () => {
-        setActiveTab(true); // Actualiza el estado para reflejar la pestaña activa
+        setactiveTab(true)
     };
 
 
     return (
+        
         <div className="m-4 rounded-xl border-2 border-gray-100">
             { activeTab && (
                 <SignInForm />
@@ -25,7 +29,7 @@ export const ButtonSignIn: React.FC= () => {
                     marginLeft: '25px',
                     // marginRight:'3px'
                 }}
-            ></button>
+            >Login with DIPPI</button>
         </div>
     );
 };
