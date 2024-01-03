@@ -1,5 +1,6 @@
 // import { useState } from 'react';
 import React from 'react';
+import '../../output.css'
 export const Collapsible = ({ title, body = false }: any) => {
     // const [isCollapsed, setIsCollapsed] = useState(collapsed);
     

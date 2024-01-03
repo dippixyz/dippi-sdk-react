@@ -1,6 +1,10 @@
 // import React, { useState } from 'react';
 import React from 'react';
+// import 'tailwindcss/tailwind.css';
+import styles from '../../styles.module.css';
+import '../../output.css'
 import {  SignInForm } from '../SignIn';
+
 // import ReactDOM from 'react-dom';
 // interface propActiveTab {
 //     activeTab: boolean;
@@ -15,7 +19,7 @@ const ButtonSignIn: React.FC =  () => {
 
     return (
         
-        <div className="m-4 rounded-xl border-2 border-gray-100">
+        <div className={styles.modalContainer}>
             { activeTab && (
                 <SignInForm />
             )}  
@@ -29,7 +33,7 @@ const ButtonSignIn: React.FC =  () => {
                     marginLeft: '25px',
                     // marginRight:'3px'
                 }}
-            >Login with DIPPI</button>
+            >Login with Dippi..</button>
         </div>
     );
 };

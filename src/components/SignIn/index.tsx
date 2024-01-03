@@ -1,55 +1,37 @@
 // import { useState } from 'react';
-import { Collapsible } from '../Collapsible';
-import React from 'react';
-// import { useAuth } from '../AuthContext';
+// import { Collapsible } from '../Collapsible';
+import React, { useState } from 'react';
+// import styles from "../../styles.module.css";
+import '../../output.css'
 
 export const SignInForm = () => {
-    // const [email, setEmail] = useState<string>('');
-    // const [password, setPassword] = useState<string>('');
+    const [showSignUp, setShowSignUp] = useState(false);
 
-    // const { error, handleSignIn } = useAuth();
+    const toggleForm = () => setShowSignUp(!showSignUp);
 
-    // const resetForm = () => {
-    //     setEmail('');
-    //     setPassword('');
-    // };
+    const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        // Logic for sign-in
+    };
+    
+    const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        // Logic for sign-up
+    };
+    
 
-    // useEffect(() => {
-    //     if (!error) {
-    //         resetForm();
-    //     }
-    // }, [error]);
-
-    return (
-        // <>
-          // <h6>llego aqui 111111</h6>
-          <Collapsible
-            collapsed={true}
-            title="Sign In"
-            body={
+    return showSignUp ? (
+            <div className="modalContainer">
+                {/* Sign Up Form Fields */}
                 <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        // handleSignIn({ email, password });
-                    }}
+                    onSubmit={handleSignUp}
                 >
-                    {/* {!!error && (
-                        <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                            {error.map(
-                                (errorMessage: string, index: string) => (
-                                    <div key={`error-message-${index}`}>
-                                        {errorMessage}
-                                    </div>
-                                ),
-                            )}
-                        </div>
-                    )} */}
                     <div className="mb-4">
                         <label
                             className="block text-gray-700 text-sm font-bold mb-2"
                             htmlFor="signin-email"
                         >
-                            Email
+                            Email:
                         </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -66,7 +48,57 @@ export const SignInForm = () => {
                             className="block text-gray-700 text-sm font-bold mb-2"
                             htmlFor="signin-password"
                         >
-                            Password
+                            Password:
+                        </label>
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="signin-password"
+                            name="password"
+                            type="password"
+                            placeholder="******************"
+                            // value={password}
+                            // onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            type="submit"
+                        >
+                            Sign Up
+                        </button>
+                    </div>
+                    <button onClick={toggleForm} className="block text-gray-700 text-sm font-bold mb-2">Already have an account? Sign In</button>
+                </form>
+            </div>
+        ) : (
+          <div className="modalContainer">
+                <form
+                    onSubmit={handleSignIn}
+                >
+                    <div className="mb-4">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="signin-email"
+                        >
+                            Email:
+                        </label>
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="signin-email"
+                            name="email"
+                            type="text"
+                            placeholder="Email"
+                            // value={email}
+                            // onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label
+                            className="block text-gray-700 text-sm font-bold mb-2"
+                            htmlFor="signin-password"
+                        >
+                            Password:
                         </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -86,9 +118,9 @@ export const SignInForm = () => {
                             Sign In
                         </button>
                     </div>
+                    <button onClick={toggleForm} className="block text-gray-700 text-sm font-bold mb-2">Don't have an account? Sign Up</button>
                 </form>
-            }
-          />
+        </div>
         // </>
         
     );
