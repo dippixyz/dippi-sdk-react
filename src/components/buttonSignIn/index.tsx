@@ -6,28 +6,36 @@ import '../../output.css'
 import {  SignInForm } from '../SignIn';
 
 // import ReactDOM from 'react-dom';
-// interface propActiveTab {
-//     activeTab: boolean;
-// }
+interface buttonSignInProps {
+    appToken : string;
+    appId : string;
+    url : string;
+}
 
-const ButtonSignIn: React.FC =  () => {
-    const [activeTab, setactiveTab] = React.useState(false);
-    const handleTabClick = () => {
-        setactiveTab(true)
+
+const ButtonSignIn =  ( {appToken,  appId , url }: buttonSignInProps  ) => {
+    const [modalOpen, setModalOpen] = React.useState(false);
+    
+    const handleOpenModal = () => {
+        setModalOpen(true)
     };
-
 
     return (
         
         <div className={styles.modalContainer}>
-            { activeTab && (
-                <SignInForm />
+            { modalOpen && (
+                <SignInForm 
+                    onClose={() => setModalOpen(false)}
+                    appToken = {appToken}
+                    appId = {appId}
+                    url = {url}
+                />
             )}  
             <h6></h6>
             <button
                 className="text-white font-bold py-2 px-4 rounded button-tba-main-2"
                 onClick={() => {
-                    handleTabClick();
+                    handleOpenModal();
                 }}
                 style={{
                     marginLeft: '25px',
