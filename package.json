@@ -1,6 +1,6 @@
 {
   "name": "@dippixyz/react-sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Dippi React SDK to implement Dippi SDK functionalities.",
   "main": "index.tsx",
   "scripts": {
@@ -10,9 +10,7 @@
   "author": "José Barrientos, Víctor Amaya & Atahualpa Erazo",
   "license": "ISC",
   "repository": "https://github.com/dippixyz/dippi-sdk-react.git",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
+
 
   "dependencies": {
     "@dippixyz/base-sdk": "1.1.1",
