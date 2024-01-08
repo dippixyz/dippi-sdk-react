@@ -11,7 +11,7 @@
   "license": "ISC",
   
   "dependencies": {
-    "@dippixyz/sdk": "file:../dippi-sdk-js/dist",
+    "@dippixyz/base-sdk": "1.1.1",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
     "react": "^18.2.0",

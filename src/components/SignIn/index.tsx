@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 // import styles from "../../styles.module.css";
 import '../../output.css'
 // "@dippixyz/sdk": "^1.0.5",
-import { Dippi } from '@dippixyz/sdk';
+import { Dippi } from '@dippixyz/base-sdk';
 
 
 
