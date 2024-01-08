@@ -1,5 +1,5 @@
 {
-  "name": "react-sdk",
+  "name": "@dippixyz/react-sdk",
   "version": "0.0.1",
   "description": "Dippi React SDK to implement Dippi SDK functionalities.",
   "main": "index.tsx",
