@@ -4,16 +4,16 @@ import { useDippiContext } from '../DippiProvider';
 import '../../output.css'
 // "@dippixyz/sdk": "^1.0.5",
 
-interface SignInFormProps {
+interface SignUpFormProps {
     onClose: () => void;
     toggleForm: () => void;
 }
 
-export const SignInForm = ( {onClose, toggleForm }: SignInFormProps ) => {
+export const SignUpForm = ( {onClose, toggleForm }: SignUpFormProps ) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     
-    const { handleSignIn } = useDippiContext();
+    const { handleSignUp} = useDippiContext();
     
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(e.target.value);
@@ -23,14 +23,12 @@ export const SignInForm = ( {onClose, toggleForm }: SignInFormProps ) => {
         setPassword(e.target.value);
     };
 
-
-
-
-
+    
     const [showSignUp, setShowSignUp] = useState(false);
 
     return (
         <div className="modalContainer">
+            {/* Sign Up Form Fields */}
             <button
                 onClick={onClose}
                 className="bg-[#47b0bf] hover:bg-[#69d1e0] text-white font-bold py-2 px-4 rounded"
@@ -43,11 +41,10 @@ export const SignInForm = ( {onClose, toggleForm }: SignInFormProps ) => {
             >
                 x
             </button>
-            
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    handleSignIn({ email, password });
+                    handleSignUp({ email, password });
                 }}
             >
                 <div className="mb-4">
@@ -64,6 +61,8 @@ export const SignInForm = ( {onClose, toggleForm }: SignInFormProps ) => {
                         type="text"
                         placeholder="Email"
                         onChange={handleEmailChange}
+                        // value={email}
+                        // onChange={(e) => setEmail(e.target.value)}
                     />
                 </div>
                 <div className="mb-4">
@@ -80,20 +79,23 @@ export const SignInForm = ( {onClose, toggleForm }: SignInFormProps ) => {
                         type="password"
                         placeholder="******************"
                         onChange={handlePasswordChange}
+                        // value={password}
+                        // onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
                 <div className="flex items-center justify-between">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         type="submit"
-                    > 
-                        Sign In
+                    >
+                        Sign Up
                     </button>
                 </div>
-                <button onClick={toggleForm} className="block text-gray-700 text-sm font-bold mb-2">Don't have an account? Sign Up</button>
+                <button onClick={toggleForm} className="block text-gray-700 text-sm font-bold mb-2">Already have an account? Sign In</button>
             </form>
         </div>
-    );
+    )
+
 };
 
-export default SignInForm;
+export default SignUpForm;

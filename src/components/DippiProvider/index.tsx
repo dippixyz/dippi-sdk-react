@@ -45,6 +45,8 @@ export function DippiProvider({ children, config}: DippiProviderProps) {
         authType:"email",
         phone: ""
     });
+
+    console.log('user SignUp>>>>>>>>>>>', user);
   };
 
   const handleSignIn = async (userData: User) => {
@@ -60,6 +62,8 @@ export function DippiProvider({ children, config}: DippiProviderProps) {
       applicationId: config.appId,
       countryCode: ""
     });
+
+    console.log('user SignIn>>>>>>>>>>>', user);
   };
 
   const logout = () => {

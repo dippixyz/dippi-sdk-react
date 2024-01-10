@@ -4,6 +4,7 @@ import React from 'react';
 import styles from '../../styles.module.css';
 import '../../output.css'
 import {  SignInForm } from '../SignIn';
+import { SignUpForm } from '../SignUp';
 
 const ButtonSignIn =  () => {
     const [modalOpen, setModalOpen] = React.useState(false);
@@ -12,13 +13,22 @@ const ButtonSignIn =  () => {
         setModalOpen(true)
     };
 
+    const [isSigningUp, setIsSigningUp] = React.useState(false);
+
+    const toggleForm = () => {
+        setIsSigningUp(!isSigningUp);
+    };
+
     return (
         
         <div className={styles.modalContainer}>
             { modalOpen && (
-                <SignInForm 
-                    onClose={() => setModalOpen(false)}
-                />
+                <div>
+                    {isSigningUp ? <SignUpForm toggleForm={toggleForm} onClose={() => setModalOpen(false)} /> : <SignInForm onClose={() => setModalOpen(false)} toggleForm={toggleForm} />}
+                </div>
+                // <SignInForm 
+                //     onClose={() => setModalOpen(false)}
+                // />
             )}  
             <h6></h6>
             <button
