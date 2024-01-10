@@ -5,15 +5,7 @@ import styles from '../../styles.module.css';
 import '../../output.css'
 import {  SignInForm } from '../SignIn';
 
-// import ReactDOM from 'react-dom';
-interface buttonSignInProps {
-    appToken : string;
-    appId : string;
-    url : string;
-}
-
-
-const ButtonSignIn =  ( {appToken,  appId , url }: buttonSignInProps  ) => {
+const ButtonSignIn =  () => {
     const [modalOpen, setModalOpen] = React.useState(false);
     
     const handleOpenModal = () => {
@@ -26,9 +18,6 @@ const ButtonSignIn =  ( {appToken,  appId , url }: buttonSignInProps  ) => {
             { modalOpen && (
                 <SignInForm 
                     onClose={() => setModalOpen(false)}
-                    appToken = {appToken}
-                    appId = {appId}
-                    url = {url}
                 />
             )}  
             <h6></h6>

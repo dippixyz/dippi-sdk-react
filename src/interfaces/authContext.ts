@@ -1,4 +1,4 @@
-import { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types';
+// import { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types';
 
 export interface SignInConnectWalletPayloadType {
     address: string;
@@ -20,7 +20,8 @@ export interface SignInPayloadType {
 }
 
 export interface PasskeySignInPayloadType {
-    authentication: AuthenticationResponseJSON;
+    // authentication: AuthenticationResponseJSON;
+    authentication: "";
     email: string;
     id: string;
 }
