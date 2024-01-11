@@ -14,13 +14,18 @@ export const SignUpForm = ( {onClose, toggleForm }: SignUpFormProps ) => {
     const [email, setEmail] = useState('');
     
     const { handleSignUp} = useDippiContext();
-    
+    const [acceptTermsAndConditions, setAcceptTermsAndConditions] =
+        useState<boolean>(false);
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setEmail(e.target.value);
     };
     
     const handlePasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setPassword(e.target.value);
+    };
+
+    const handleOpenModal = () => {
+        setModalOpen(true);
     };
 
     
@@ -83,6 +88,37 @@ export const SignUpForm = ( {onClose, toggleForm }: SignUpFormProps ) => {
                         // onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
+                
+                <div className="flex items-center justify-between">
+                    <input
+                        className="shadow border rounded px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="signup-terms-and-conditions"
+                        name="terms-and-conditions"
+                        type="checkbox"
+                        checked={acceptTermsAndConditions}
+                        required
+                        onChange={(e) => {
+                            setAcceptTermsAndConditions(e.target.checked);
+                        }}
+                    />
+                    <label
+                        className="block text-gray-700 text-sm font-bold"
+                        htmlFor="signup-terms-and-conditions"
+                    >
+                        <button
+                            onClick={handleOpenModal}
+                            className="btn-bg rounded-md p-2 ml-4"
+                            style={{
+                                color: '#01b1ca',
+                                backgroundColor: 'transparent',
+                            }}
+                        >
+                            Accept terms and conditions
+                        </button>
+                    </label>
+                </div>
+                    
+
                 <div className="flex items-center justify-between">
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
