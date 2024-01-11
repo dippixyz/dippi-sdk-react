@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useDippiContext } from '../DippiProvider';
-
+import SignInForm from '../SignInForm';
 import '../../output.css'
 // "@dippixyz/sdk": "^1.0.5",
 
@@ -9,91 +8,86 @@ interface SignInFormProps {
     toggleForm: () => void;
 }
 
-export const SignInForm = ( {onClose, toggleForm }: SignInFormProps ) => {
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
-    
-    const { handleSignIn } = useDippiContext();
-    
-    const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        setEmail(e.target.value);
-    };
-    
-    const handlePasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        setPassword(e.target.value);
-    };
+export const SignIn = ( {onClose, toggleForm }: SignInFormProps ) => {
+    const possibleMessages = [
+        'Connecting your Wallet...',
+        'Generating Wallet...',
+        'Waiting for the transaction to be confirmed ...',
+        'Your wallet is connected!',
+        'Just a little longer...',
+    ];
 
+    const [messageIndex, setMessageIndex] = useState(0);
+    const [show, setShow] = useState(false);
 
-
-
-
-    const [showSignUp, setShowSignUp] = useState(false);
 
     return (
-        <div className="modalContainer">
-            <button
-                onClick={onClose}
-                className="bg-[#47b0bf] hover:bg-[#69d1e0] text-white font-bold py-2 px-4 rounded"
-                style={{
-                    position: 'absolute',
-                    top: '5px',
-                    right: '5px',
-                    cursor: 'pointer',
-                }}
+        <>
+            <div
+                className="grid modalContainer"
+                style={{ backgroundImage: `url(/assets/img/wallpaper.png)` }}
             >
-                x
-            </button>
-            
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSignIn({ email, password });
-                }}
-            >
-                <div className="mb-4">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="signin-email"
-                    >
-                        Email:
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="signin-email"
-                        name="email"
-                        type="text"
-                        placeholder="Email"
-                        onChange={handleEmailChange}
-                    />
-                </div>
-                <div className="mb-4">
-                    <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="signin-password"
-                    >
-                        Password:
-                    </label>
-                    <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="signin-password"
-                        name="password"
-                        type="password"
-                        placeholder="******************"
-                        onChange={handlePasswordChange}
-                    />
-                </div>
-                <div className="flex items-center justify-between">
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit"
-                    > 
-                        Sign In
-                    </button>
-                </div>
-                <button onClick={toggleForm} className="block text-gray-700 text-sm font-bold mb-2">Don't have an account? Sign Up</button>
-            </form>
-        </div>
-    );
-};
+                <button
+                    onClick={onClose}
+                    className="bg-[#47b0bf] hover:bg-[#69d1e0] text-white font-bold py-2 px-4 rounded"
+                    style={{
+                        position: 'absolute',
+                        top: '4px',
+                        right: '5px',
+                        cursor: 'pointer',
+                    }}
+                >
+                    x
+                </button>
+                <div className="flex items-center justify-center mt-6">
+                    <div className="w-full max-w-[320px]">
+                        <div className="grid min-h-screen pb-14">
+                            <div className="flex items-center justify-center p-4">
+                                <div className="pb-14">
+                                    <div className="img-modal flex justify-center mb-4">
+                                        <img
+                                            alt="Dippi"
+                                            src="https://app.dippi.xyz/assets/img/logo-beta.png"
+                                            width={100}
+                                            height={100}
+                                        />
+                                    </div>
+                                    <h1
+                                        className="mb-6 text-4xl text-center"
+                                        style={{ fontWeight: 600 }}
+                                    >
+                                        Sign in
+                                    </h1>
+                                    
 
-export default SignInForm;
+                                    {!show && (
+                                        <>
+                                            <div className="mb-5">
+                                                <SignInForm />
+                                            </div>
+                                            
+                                        </>
+                                    )}
+
+                                    {!show && (
+                                        <div className="flex items-center justify-center">
+                                            <div className="text-xl">
+                                                Don't have an account?
+                                            </div>
+                                            <div
+                                                className="text-xl text-[#01b1ca] hover:text-[#01b1ca] cursor-pointer ml-2"
+                                                onClick={toggleForm}
+                                            >
+                                                Sign up
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
