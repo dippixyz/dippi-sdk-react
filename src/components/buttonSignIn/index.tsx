@@ -3,7 +3,7 @@ import React from 'react';
 // import 'tailwindcss/tailwind.css';
 import styles from '../../styles.module.css';
 import '../../output.css'
-import {  SignInForm } from '../SignIn';
+import {  SignIn } from '../SignIn';
 import { SignUpForm } from '../SignUp';
 
 const ButtonSignIn =  () => {
@@ -24,7 +24,7 @@ const ButtonSignIn =  () => {
         <div className={styles.modalContainer}>
             { modalOpen && (
                 <div>
-                    {isSigningUp ? <SignUpForm toggleForm={toggleForm} onClose={() => setModalOpen(false)} /> : <SignInForm onClose={() => setModalOpen(false)} toggleForm={toggleForm} />}
+                    {isSigningUp ? <SignUpForm toggleForm={toggleForm} onClose={() => setModalOpen(false)} /> : <SignIn onClose={() => setModalOpen(false)} toggleForm={toggleForm} />}
                 </div>
                 // <SignInForm 
                 //     onClose={() => setModalOpen(false)}
