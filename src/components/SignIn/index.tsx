@@ -77,6 +77,7 @@ export const SignIn = ( {onClose, toggleForm }: SignInFormProps ) => {
                                             <div
                                                 className="text-xl text-[#01b1ca] hover:text-[#01b1ca] cursor-pointer ml-2"
                                                 onClick={toggleForm}
+                                                style={{ width: '63px' }}
                                             >
                                                 Sign up
                                             </div>
