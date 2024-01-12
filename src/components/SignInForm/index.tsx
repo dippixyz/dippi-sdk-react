@@ -81,7 +81,7 @@ export const SignInForm = () => {
                 e.preventDefault();
                 handleSubmit();
             }}
-            className="max-w-[320px] space-y-6"
+            className="max-w-[320px]"
         >
          
             {!!errorLogin && (
@@ -119,7 +119,7 @@ export const SignInForm = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <small>
+                <small style={{fontSize: '15px'}}>
                     {' '}
                     Forgot your password?{' '}
                     <a href="/forgot-password" className="text-[#33d4e4]">
@@ -135,14 +135,6 @@ export const SignInForm = () => {
                 >
                     Sign In
                 </button>
-            </div>
-            <div>
-               
-            </div>
-            <div className="divider">
-                <span className="line"></span>
-                <span className="or">or</span>
-                <span className="line"></span>
             </div>
         </form>
     );

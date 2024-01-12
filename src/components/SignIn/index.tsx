@@ -24,12 +24,12 @@ export const SignIn = ( {onClose, toggleForm }: SignInFormProps ) => {
     return (
         <>
             <div
-                className="grid modalContainer"
+                className="grid modalContainer max-h-[620px]"
                 style={{ backgroundImage: `url(/assets/img/wallpaper.png)` }}
             >
                 <button
                     onClick={onClose}
-                    className="bg-[#47b0bf] hover:bg-[#69d1e0] text-white font-bold py-2 px-4 rounded"
+                    className="bg-[#47b0bf] hover:bg-[#69d1e0] text-white font-bold px-2 rounded"
                     style={{
                         position: 'absolute',
                         top: '4px',
@@ -42,7 +42,7 @@ export const SignIn = ( {onClose, toggleForm }: SignInFormProps ) => {
                 <div className="flex items-center justify-center mt-6">
                     <div className="w-full max-w-[320px]">
                         <div className="grid min-h-screen pb-14">
-                            <div className="flex items-center justify-center p-4">
+                            <div className="flex justify-center pl-4 pr-4">
                                 <div className="pb-14">
                                     <div className="img-modal flex justify-center mb-4">
                                         <img
@@ -71,13 +71,13 @@ export const SignIn = ( {onClose, toggleForm }: SignInFormProps ) => {
 
                                     {!show && (
                                         <div className="flex items-center justify-center">
-                                            <div className="text-xl">
+                                            <div style={{fontSize: '15px'}}>
                                                 Don't have an account?
                                             </div>
                                             <div
-                                                className="text-xl text-[#01b1ca] hover:text-[#01b1ca] cursor-pointer ml-2"
+                                                className="text-[#01b1ca] hover:text-[#01b1ca] cursor-pointer ml-2"
                                                 onClick={toggleForm}
-                                                style={{ width: '63px' }}
+                                                style={{ width: '63px' , fontSize: '15px'}}
                                             >
                                                 Sign up
                                             </div>

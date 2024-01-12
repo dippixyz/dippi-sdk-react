@@ -77,7 +77,7 @@ export const SignUpForm = () => {
                 e.preventDefault();
                 handleSubmit();
             }}
-            className="max-w-[320px] space-y-6"
+            className="max-w-[320px]"
         >
          
             {!!errorLogin && (
@@ -104,7 +104,7 @@ export const SignUpForm = () => {
                     }}
                 />
             </div>
-            <div className="mb-8">
+            <div>
                 <input
                     className="text-xl shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="signin-password"
@@ -115,12 +115,9 @@ export const SignUpForm = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <small>
+                <small style={{fontSize: '15px', color: 'transparent'}}>
                     {' '}
                     Forgot your password?{' '}
-                    <a href="/forgot-password" className="text-[#33d4e4]">
-                        Reset it here
-                    </a>
                 </small>
             </div>
             <div className="flex items-center justify-between">
@@ -131,14 +128,6 @@ export const SignUpForm = () => {
                 >
                     Sign Up
                 </button>
-            </div>
-            <div>
-               
-            </div>
-            <div className="divider">
-                <span className="line"></span>
-                <span className="or">or</span>
-                <span className="line"></span>
             </div>
         </form>
     );
