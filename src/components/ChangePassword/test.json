@@ -1,0 +1,5 @@
+{
+    "Purposes of the transfer(s)": "The data importer negotiating and evaluating risk relating to a reinsurance agreement to be entered into with the data exporter (or a renewal thereof) or for the purposes of the data importer assessing or verifying a claim made by the data exporter pursuant to any such reinsurance agreement.",
+    "Categories of data": "Insured Person Data: name, address, telephone number, email address, policy number, relationship to the policyholder, details of policy including insured amount, exceptions etc., previous claims, gender, date of birth, vehicle registration number, professional history or CV, schedule of possessions, property construction, physical condition, security, fire protection and value. Claimant Data: policy number, relationship to the policyholder/insured person, details of policy including insured amount, exceptions etc., previous claims, details of incident giving rise to claim, handset details and IMEI number, vehicle registration number. Business Partner Data: name, work address, work email, work telephone numbers, job title",
+    "Frequency of transfer": "As required for the purposes of the transfer."
+}
