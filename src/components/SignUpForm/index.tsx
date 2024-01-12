@@ -11,7 +11,7 @@ export const SignUpForm = () => {
     const [users, setUsers] = useState([
         { email: '', registered_passkey: false },
     ]);
-
+  
     const handleCloseModal = () => {
         setModalOpen(false);
     };
@@ -23,8 +23,8 @@ export const SignUpForm = () => {
     const [acceptTermsAndConditions, setAcceptTermsAndConditions] =
         useState<boolean>(false);
 
+
     const handleSubmit = async () => {
-        
         handleSignUp({ email, password });
     };
 
@@ -86,56 +86,55 @@ export const SignUpForm = () => {
 
     return (
         <>
-            {modalOpen && (
-                <PrivacyPolicyModal open={true} onClose={handleCloseModal} />
-            )}
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    handleSubmit();
-                }}
-                className="max-w-[320px] space-y-6"
-            >
-            
-                {!!errorLogin && (
-                    <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                        {errorLogin}
-                    </div>
-                )}
+          {modalOpen && (
+            <PrivacyPolicyModal open={true} onClose={handleCloseModal} />
+          )}
+          <form
+              onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+              }}
+              className="max-w-[320px]"
+          >
 
-                {/^\+?\d+$/.test(email) && (
-                    <div className="mb-6 -space-y-px items-center shadow appearance-none border rounded">
-                    </div>
-                )}
-                <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                    <input
-                        className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="signin-email"
-                        name="email"
-                        type="text"
-                        autoComplete="webauthn"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => {
-                            handleEmailChange(e);
-                        }}
-                    />
-                </div>
+              {!!errorLogin && (
+                  <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
+                      {errorLogin}
+                  </div>
+              )}
 
-                <div className="mb-8">
-                    <input
-                        className="text-xl shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="signin-password"
-                        name="password"
-                        type="password"
-                        autoComplete="webauthn"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                
-                <div className="flex items-center justify-between">
+              {/^\+?\d+$/.test(email) && (
+                  <div className="mb-6 -space-y-px items-center shadow appearance-none border rounded">
+                  </div>
+              )}
+              <div className="flex mb-6 items-center shadow appearance-none border rounded">
+                  <input
+                      className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="signin-email"
+                      name="email"
+                      type="text"
+                      autoComplete="webauthn"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => {
+                          handleEmailChange(e);
+                      }}
+                  />
+              </div>
+              <div>
+                  <input
+                      className="text-xl shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="signin-password"
+                      name="password"
+                      type="password"
+                      autoComplete="webauthn"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              
+              <div className="flex items-center justify-between">
                     <input
                         className="shadow border rounded px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         id="signup-terms-and-conditions"
@@ -164,31 +163,19 @@ export const SignUpForm = () => {
                             Accept terms and conditions
                         </button>
                     </label>
-                </div>
-                
-                
-
-
-                <div className="flex items-center justify-between">
-                    <button
-                        className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit"
-                        id="button-login"
-                    >
-                        Sign Up
-                    </button>
-                </div>
-                <div>
-                
-                </div>
-                <div className="divider">
-                    <span className="line"></span>
-                    <span className="or">or</span>
-                    <span className="line"></span>
-                </div>
-            </form>
+               </div>
+            
+              <div className="flex items-center justify-between">
+                  <button
+                      className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="submit"
+                      id="button-login"
+                  >
+                      Sign Up
+                  </button>
+              </div>
+          </form>
         </>
-        
     );
 };
 

@@ -18,3 +18,7 @@ export interface User {
     isVerified: boolean;
     wallets: Wallet[];
 }
+
+export interface ConfirmEmailProps {
+    success: boolean;
+} 
