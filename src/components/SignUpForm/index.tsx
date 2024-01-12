@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDippiContext } from '../DippiProvider';
+import AlertError from '../AlertError';
+
 export const SignUpForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {  handleSignUp } = useDippiContext();
-    const [errorLogin] = useState('');
+    const {  handleSignUp, error } = useDippiContext();
     const [usePassword, setUsePassword] = useState(false);
     const [users, setUsers] = useState([
         { email: '', registered_passkey: false },
@@ -79,11 +80,8 @@ export const SignUpForm = () => {
             }}
             className="max-w-[320px]"
         >
-         
-            {!!errorLogin && (
-                <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                    {errorLogin}
-                </div>
+            {!!error && (
+                <AlertError title="Error" message={error} />
             )}
 
             {/^\+?\d+$/.test(email) && (
