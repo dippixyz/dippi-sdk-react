@@ -25,7 +25,7 @@ export const SignUp = ( {onClose, toggleForm }: SignUpFormProps ) => {
         <>
             <div
                 className="grid modalContainer max-h-[620px]"
-                style={{ backgroundImage: `url(/assets/img/wallpaper.png)` }}
+                style={{ backgroundImage: `url(/assets/img/wallpaper.png)`, zIndex:1 }}
             >
                 <button
                     onClick={onClose}

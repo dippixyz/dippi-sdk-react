@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDippiContext } from '../DippiProvider';
+import PrivacyPolicyModal from '../PrivacyPolicyModal';
 export const SignUpForm = () => {
     const [email, setEmail] = useState('');
+    const [modalOpen, setModalOpen] = useState(false);
     const [password, setPassword] = useState('');
     const {  handleSignUp } = useDippiContext();
     const [errorLogin] = useState('');
@@ -9,6 +11,17 @@ export const SignUpForm = () => {
     const [users, setUsers] = useState([
         { email: '', registered_passkey: false },
     ]);
+  
+    const handleCloseModal = () => {
+        setModalOpen(false);
+    };
+
+    const handleOpenModal = () => {
+        setModalOpen(true);
+    };
+
+    const [acceptTermsAndConditions, setAcceptTermsAndConditions] =
+        useState<boolean>(false);
 
 
     const handleSubmit = async () => {
@@ -72,64 +85,97 @@ export const SignUpForm = () => {
     }, []);
 
     return (
-        <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit();
-            }}
-            className="max-w-[320px]"
-        >
-         
-            {!!errorLogin && (
-                <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                    {errorLogin}
-                </div>
-            )}
+        <>
+          {modalOpen && (
+            <PrivacyPolicyModal open={true} onClose={handleCloseModal} />
+          )}
+          <form
+              onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+              }}
+              className="max-w-[320px]"
+          >
 
-            {/^\+?\d+$/.test(email) && (
-                <div className="mb-6 -space-y-px items-center shadow appearance-none border rounded">
-                </div>
-            )}
-            <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                <input
-                    className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="signin-email"
-                    name="email"
-                    type="text"
-                    autoComplete="webauthn"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => {
-                        handleEmailChange(e);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    className="text-xl shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="signin-password"
-                    name="password"
-                    type="password"
-                    autoComplete="webauthn"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <small style={{fontSize: '15px', color: 'transparent'}}>
-                    {' '}
-                    Forgot your password?{' '}
-                </small>
-            </div>
-            <div className="flex items-center justify-between">
-                <button
-                    className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="submit"
-                    id="button-login"
-                >
-                    Sign Up
-                </button>
-            </div>
-        </form>
+              {!!errorLogin && (
+                  <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
+                      {errorLogin}
+                  </div>
+              )}
+
+              {/^\+?\d+$/.test(email) && (
+                  <div className="mb-6 -space-y-px items-center shadow appearance-none border rounded">
+                  </div>
+              )}
+              <div className="flex mb-6 items-center shadow appearance-none border rounded">
+                  <input
+                      className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="signin-email"
+                      name="email"
+                      type="text"
+                      autoComplete="webauthn"
+                      placeholder="Email"
+                      value={email}
+                      onChange={(e) => {
+                          handleEmailChange(e);
+                      }}
+                  />
+              </div>
+              <div>
+                  <input
+                      className="text-xl shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="signin-password"
+                      name="password"
+                      type="password"
+                      autoComplete="webauthn"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                  />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                    <input
+                        className="shadow border rounded px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="signup-terms-and-conditions"
+                        name="terms-and-conditions"
+                        type="checkbox"
+                        checked={acceptTermsAndConditions}
+                        required
+                        onChange={(e) => {
+                            setAcceptTermsAndConditions(e.target.checked);
+                        }}
+                    />
+
+
+                    <label
+                        className="block text-gray-700 text-sm font-bold"
+                        htmlFor="signup-terms-and-conditions"
+                    >
+                        <button
+                            onClick={handleOpenModal}
+                            className="btn-bg rounded-md p-2 ml-4"
+                            style={{
+                                color: '#01b1ca',
+                                backgroundColor: 'transparent',
+                            }}
+                        >
+                            Accept terms and conditions
+                        </button>
+                    </label>
+               </div>
+            
+              <div className="flex items-center justify-between">
+                  <button
+                      className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
+                      type="submit"
+                      id="button-login"
+                  >
+                      Sign Up
+                  </button>
+              </div>
+          </form>
+        </>
     );
 };
 
