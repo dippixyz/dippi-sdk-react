@@ -150,8 +150,10 @@ export const SignUpForm = () => {
                             setAcceptTermsAndConditions(e.target.checked);
                         }}
                     />
-
-
+                    <small style={{fontSize: '15px', color: 'transparent'}}>
+                        {' '}
+                        Forgot your password?{' '}
+                    </small>
                     <label
                         className="block text-gray-700 text-sm font-bold"
                         htmlFor="signup-terms-and-conditions"
