@@ -30,9 +30,9 @@ export interface PasskeySignInPayloadType {
 export interface DippiProviderProps {
     children: ReactNode;
     config: {
-      appToken: string;
-      appId: string;
-      url: string;
+        appToken: string;
+        appId: string;
+        url: string;
     };
 }
 

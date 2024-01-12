@@ -31,7 +31,7 @@ export const openDB = () => {
     });
 };
 
-export const addObjectToDB = async (data: any) => {
+export const addObjectToDB = async (data: { id: string, value: string}) => {
     if (!DB_NAME || !STORE_NAME) {
         throw new Error('DB_NAME or STORE_NAME is not defined');
     }
