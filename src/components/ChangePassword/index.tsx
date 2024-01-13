@@ -6,19 +6,15 @@ import '../../output.css'
 
 interface ChangePasswordFormProps {
     onClose: () => void;
+    email: string;
 }
 
-export const ChangePasswordForm = ( {onClose }: ChangePasswordFormProps ) => {
+export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps ) => {
     const [oldPassword, setOldPassword] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
-    const [email, setEmail] = useState('');
     
     const { handlePasswordChange: handlePasswordChange_} = useDippiContext();
-    
-    const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-        setEmail(e.target.value);
-    };
     
     const handleOldPasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
         setOldPassword(e.target.value);
@@ -67,11 +63,14 @@ export const ChangePasswordForm = ( {onClose }: ChangePasswordFormProps ) => {
                             Email:
                         </label>
                         <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="signin-email"
                             name="email"
                             type="text"
-                            placeholder="Email"
-                            onChange={handleEmailChange}
+                            // placeholder="Email"
+                            // onChange={handleEmailChange}
+                            value={email}
+                            readOnly
                         />
                     </div>
                     <div className="mb-4">
@@ -130,7 +129,6 @@ export const ChangePasswordForm = ( {onClose }: ChangePasswordFormProps ) => {
                             Change Password
                         </button>
                     </div>
-                    <button onClick={toggleForm} className="block text-gray-700 text-sm font-bold mb-2">Already have an account? Sign In</button>
                 </form>
             </div>
         </>

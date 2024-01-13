@@ -1,3 +1,3 @@
 import React from 'react';
-export declare const SignInForm: () => React.JSX.Element;
-export default SignInForm;
+export declare const ChangePasswordForm: () => React.JSX.Element;
+export default ChangePasswordForm;
