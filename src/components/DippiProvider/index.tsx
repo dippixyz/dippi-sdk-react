@@ -1,9 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Dippi } from '@dippixyz/base-sdk';
+import { Dippi } from '@dippixyz/base';
 import { DippiProviderProps , User} from '../../interfaces/authContext';
 import { UserDippiResponseBody } from '../../interfaces/users.interface';
 import { ParamsCreateWallet, Wallet } from '../../interfaces/wallet.interface';
 import { addObjectToDB } from '../../utils/functions/indexDB';
+
+interface ChangePasswordPayload {
+    userEmail: string;
+    oldPassword: string;
+    password: string;
+    repeatedPassword: string;
+}
 
 interface AuthContextType {
     user: UserDippiResponseBody | null;
@@ -14,7 +21,8 @@ interface AuthContextType {
     handleSignIn: (userData: User) => void;
     handleSignUp: (userData: User) => void;
     createWallet: (params: ParamsCreateWallet) => void;
-    logout: () => void;
+    handlePasswordChange: (changePasswordData: ChangePasswordPayload) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -158,6 +166,21 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         }
     }
 
+
+  const handlePasswordChange = async (changePasswordData: ChangePasswordPayload) => {
+
+    const { accessToken } = await dippiClient.auth.login();
+    dippiClient.setAuthToken(accessToken);
+
+    let change = await dippiClient.user.changePassword({
+      userEmail: changePasswordData.userEmail,
+      oldPassword: changePasswordData.oldPassword,
+      password: changePasswordData.password,
+      repeatedPassword: changePasswordData.repeatedPassword
+    });
+
+    console.log('change password...:', change);
+  };
 
     const logout = () => {
         setUser(null);
