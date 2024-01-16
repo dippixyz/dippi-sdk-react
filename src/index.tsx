@@ -12,6 +12,7 @@ export const ExampleComponent = ({ text }: Props) => {
 
 export { default as ButtonSignIn } from './components/buttonSignIn';
 export { default as ChangePasswordForm } from './components/ChangePassword';
+export { default as TransactionForm } from './components/TransactionForm';
 export { DippiProvider } from './components/DippiProvider';
 export { default as DecryptKeyCode } from './components/DecryptKeyCode';
 export { default as EncryptKeyCode } from './components/EncryptKeyCode';
