@@ -61,6 +61,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         // si da error al crear el usuario, entonces mostrar el error en pantalla
         // createProfile(data: UserCreatePayload): Promise<UserResponseBody>; hay que agregar los errores en los tipos del SDK base
         if ('error' in user) {
+            console.log('error user ============>', user.code, user.message)
             return
         }
         if (!user.id) {
@@ -93,6 +94,10 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         });
 
         // La respuesta de authenticate esta mal tipado en el SDK base
+        if ('error' in user) {
+            console.log('error user ============>', user.code, user.message)
+            return
+        }
         setIsConnected(true);
         console.log('user SignIn>>>>>>>>>>>', user);
         
@@ -109,6 +114,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         let user = await dippiClient.user.getProfile(id);
         
         if ('error' in user) {
+            console.log('error user ============>', user.code, user.message)
             return
         }
         console.log('get user profile >>>>>>>>>>>', user);
