@@ -60,7 +60,9 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
 
         // si da error al crear el usuario, entonces mostrar el error en pantalla
         // createProfile(data: UserCreatePayload): Promise<UserResponseBody>; hay que agregar los errores en los tipos del SDK base
-
+        if ('error' in user) {
+            return
+        }
         if (!user.id) {
             console.log('error al crear el usuario >>>>>>>>>>>', user);
             setError('Error to create user');
@@ -105,6 +107,10 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         dippiClient.setAuthToken(accessToken);
 
         let user = await dippiClient.user.getProfile(id);
+        
+        if ('error' in user) {
+            return
+        }
         console.log('get user profile >>>>>>>>>>>', user);
 
         if(user.isVerified === true) {
@@ -196,6 +202,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
                 isConnected,
                 handleSignIn, 
                 handleSignUp, 
+                handlePasswordChange,
                 createWallet,
                 logout 
             }}>
