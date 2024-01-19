@@ -42,4 +42,5 @@ export interface UserDippiResponseBody {
 
 export interface ConfirmEmailProps {
     success: boolean;
+    email?: string;
 } 

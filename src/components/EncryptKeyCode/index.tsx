@@ -28,8 +28,6 @@ const EncryptCode = ({ setCode, showPossibleMsg }: EncryptCodeProps) => {
             const newCodes = [...codes];
             newCodes[index] = value;
             setCodes(newCodes);
-
-            // Move to the next input
             if (value.length === 1 && index < inputRefs.current.length - 1) {
                 inputRefs.current[index + 1]?.focus();
             }
@@ -37,8 +35,6 @@ const EncryptCode = ({ setCode, showPossibleMsg }: EncryptCodeProps) => {
     };
 
     const handleSetCode = () => {
-        // Send the 4-digit code to an API
-        console.log('code to encrypt key .....', codes)
         const code = codes.join('');
         if (code.length == 4) {
             setCode(code);
@@ -48,7 +44,6 @@ const EncryptCode = ({ setCode, showPossibleMsg }: EncryptCodeProps) => {
                 environment: 'Main Net'
             });
         }
-        // buttonSubmited convert to true
     };
 
     const [messageIndex, setMessageIndex] = useState(0);

@@ -6,6 +6,7 @@
     background-color: #fff;
     padding: 10px;
     z-index: 1000;
+    min-width: 350px;
 }
 
 .centered-image {
