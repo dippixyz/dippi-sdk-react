@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useDippiContext } from '../DippiProvider';
-
 import '../../output.css'
-// "@dippixyz/sdk": "^1.0.5",
 
 interface ChangePasswordFormProps {
     onClose: () => void;
@@ -65,7 +63,6 @@ export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps )
                             return;
                         }
                         const change = handlePasswordChange_( {userEmail: email, oldPassword, password, repeatedPassword: repeatPassword} )
-                        console.log('change password...:', change);
                     }}
                     className="max-w-[320px]"
                 >
