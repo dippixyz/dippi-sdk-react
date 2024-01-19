@@ -180,6 +180,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                             type="text"
                             placeholder="Destination Address"
                             value={destinationAddress}
+                            size={48}
                             onChange={(e) => {
                                 handleDestinationAddressChange(e);
                             }}
@@ -219,7 +220,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                         </button>
                     </div>
                     {openModal && (<SignTransaction setCode={setCode} setOpenModal={setOpenModal} tx={trxDetails}/>)}
-                    {showNotification && (<div className="flex items-center justify-between">
+                    {showNotification && (<div className="text-sm flex mb-6 items-center shadow appearance-none rounded">
                         {notificationText}
                     </div>)}
                 </>

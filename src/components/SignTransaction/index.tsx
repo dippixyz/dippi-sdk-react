@@ -5,13 +5,13 @@ import ContentModal from './contentModal';
 import { formatEther } from 'ethers';
 import { transactionDetails } from '../../utils/functions/blockchainTransactions';
 
-interface DecryptCodeProps {
+interface SignTransactionProps {
     setCode: (code: string) => void;
     setOpenModal: (openModal: boolean) => void;
     tx: transactionDetails;
 }
 
-const DecryptCode = ({ setCode, setOpenModal, tx }: DecryptCodeProps) => {
+const SignTransaction = ({ setCode, setOpenModal, tx }: SignTransactionProps) => {
     const open = true;
     const cancelButtonRef = useRef(null);
     const [modalCode, setModalCode] = useState<string>('');
@@ -116,4 +116,4 @@ const DecryptCode = ({ setCode, setOpenModal, tx }: DecryptCodeProps) => {
     );
 };
 
-export default DecryptCode;
+export default SignTransaction;
