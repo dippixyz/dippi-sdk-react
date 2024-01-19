@@ -2,13 +2,16 @@ import { Fragment, useRef, useState, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import ContentModal from './contentModal';
+import { formatEther } from 'ethers';
+import { transactionDetails } from '../../utils/functions/blockchainTransactions';
 
 interface DecryptCodeProps {
     setCode: (code: string) => void;
     setOpenModal: (openModal: boolean) => void;
+    tx: transactionDetails;
 }
 
-const DecryptCode = ({ setCode, setOpenModal }: DecryptCodeProps) => {
+const DecryptCode = ({ setCode, setOpenModal, tx }: DecryptCodeProps) => {
     const open = true;
     const cancelButtonRef = useRef(null);
     const [modalCode, setModalCode] = useState<string>('');
@@ -21,8 +24,6 @@ const DecryptCode = ({ setCode, setOpenModal }: DecryptCodeProps) => {
     }, [modalCode]);
 
     useEffect(() => {
-        console.log('myOpenModal >>>>>>>>>>>', myOpenModal);
-        
         if (!myOpenModal) {
             setOpenModal(myOpenModal);
         }
@@ -75,6 +76,26 @@ const DecryptCode = ({ setCode, setOpenModal }: DecryptCodeProps) => {
                                             >
                                                 You are about to sign and send a transaction!
                                             </Dialog.Title>
+                                            <br />
+                                            <div className='text-sm space-y-3'>
+                                                <p><strong>To: </strong>{tx.to}</p>
+                                                <p />
+                                            </div>
+                                            <hr />
+                                            <div className='text-sm space-y-3'>
+                                                <p />
+                                                <p><strong>Amount: </strong>{formatEther(tx.value)}</p>
+                                                <p><strong>Max Gas: </strong>{formatEther(tx.gasLimit)}</p>
+                                                <p />
+                                            </div>
+                                            <hr />
+                                            <div className='text-sm space-y-3'>
+                                                <p />
+                                                <p><strong>Estimated Total: </strong>{formatEther(tx.trxTotal)}</p>
+                                                <p />
+                                            </div>
+                                            <hr />
+                                            <p />
                                             <div className="mt-2">
                                                 <ContentModal
                                                     setCode={setModalCode}
