@@ -78,7 +78,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         });
 
         if ('error' in response) {
-            throw new Error(response.message);
+            setError(response.message);
+            return;
         }
 
         const user = response as UserDippiResponseBody;
@@ -94,6 +95,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
 
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
+        setError('');
 
         const response = await dippiClient.user.authenticate({
             email: userData.email,
@@ -105,7 +107,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
 
         // La respuesta de authenticate esta mal tipado en el SDK base
         if ('error' in response) {
-            throw new Error(response.message);
+            setError(response.message);
+            return;
         }
 
         const user = response.user as UserDippiResponseBody;
@@ -121,7 +124,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
 
         const response = await dippiClient.user.getProfile(id);
         if ('error' in response) {
-            throw new Error(response.message);
+            setError(response.message);
+            return;
         }
         const user = response as UserDippiResponseBody;
 
@@ -166,7 +170,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         });
 
         if (!wallet.id){
-            throw new Error('Error creating wallet');
+            setError('Error creating wallet');
+            return;
         } else {
 
             setAddress(wallet.address);
@@ -198,6 +203,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         setAddress('');
         setIsConnected(false);
         setSignUpStatus('initial');
+        setError('');
         localStorage.removeItem('dippiUserData');
     };
 
