@@ -8,7 +8,7 @@ import { setProvider, ProviderPayload } from '../../utils/functions/providers';
 import { transactionDetails, getExplorerUrl } from '../../utils/functions/blockchainTransactions';
 
 export const TransactionForm = (props: ProviderPayload) => {
-    const { signUpStatus, address, isConnected, user } = useDippiContext();
+    const { isConnected, user } = useDippiContext();
     const [destinationAddress, setDestinationAddress] = useState<string>('');
     const [amount, setAmount] = useState<number>(0);
     const [gasCost, setGasCost] = useState<bigint>(ethers.parseEther('0'));
@@ -32,17 +32,12 @@ export const TransactionForm = (props: ProviderPayload) => {
         'Your private key has been copied to your clipboard!',
     );
     const [invalidCode, setInvalidCode] = useState<boolean>(false);
-    const [showInputCopy, setShowInputCopy] = useState<boolean>(false);
-    const [content, setContent] = useState<string>('');
 
     let provider = setProvider(props);
 
     const decryptAndSign = (code: string) => {
         const encryptionKey = code;
 
-        if (user && !user?.id) {
-            user.id = 'clrhtjrjf0000le22h78ksufd';
-        }
         const walletId = user?.id || 'clrhtjrjf0000le22h78ksufd';
         
         if (!walletId) {
@@ -73,7 +68,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                         provider.getNetwork().then((network: ethers.Network) => {
                             console.log('chainId...:', network.chainId);
                             const txUrl = getExplorerUrl(parseInt(network.chainId.toString()), txResult.hash);
-                            const txLink = <a href={txUrl} target="_blank" rel="noopener noreferrer">{'Transaction completed with hash: ' + txResult.hash}</a>;
+                            const txLink = <a href={txUrl} target="_blank" rel="noopener noreferrer" className="text-red-500 overflow-auto whitespace-normal">{'Transaction completed with hash: ' + txResult.hash}</a>;
                             setNotificationText(txLink);
                             setShowNotification(true);
                         });
@@ -88,8 +83,6 @@ export const TransactionForm = (props: ProviderPayload) => {
                 setInvalidCode(false);
             })
             .catch((error) => {
-                console.log('error decrypting...:', error);
-                
                 setNotificationText(
                     "Error retrieving your private key. Please try again with a different code.",
                 );
@@ -110,6 +103,26 @@ export const TransactionForm = (props: ProviderPayload) => {
             }
         }
     }
+
+    const handleNextScreen = () => {
+        console.log('handleNextScreen...', isConnected);
+        
+        if (!isConnected) {
+            setNotificationText(
+                "Please connect your wallet to continue.",
+            );
+            setShowNotification(true);
+            return;
+        }
+        if (ethers.isAddress(destinationAddress) && amount > 0) {
+            setOpenModal(true);
+        } else {
+            setNotificationText(
+                "Please enter a valid destination address and amount.",
+            );
+            setShowNotification(true);
+        }
+    };
 
     const QuoteTransaction = async (provider: ethers.Provider) => {
         const tx = {
@@ -165,66 +178,71 @@ export const TransactionForm = (props: ProviderPayload) => {
 
     return (
         <>
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                }}
-                className="max-w-[480px]"
-            >
-                <>
-                    <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        <input
-                            className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="destination-address"
-                            name="destinationAddress"
-                            type="text"
-                            placeholder="Destination Address"
-                            value={destinationAddress}
-                            size={48}
-                            onChange={(e) => {
-                                handleDestinationAddressChange(e);
-                            }}
-                        />
-                    </div>
-                    <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        <input
-                            className="text-lg shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="amount"
-                            name="amount"
-                            type="number"
-                            placeholder="Token amount 0.00"
-                            value={amount}
-                            onChange={(e) => {
-                                handleAmountChange(e);
-                            }}
-                        />
-                    </div>
-                    {gasFlag.current === true && (
-                        <>
-                            <div className="text-sm flex mb-6 items-center shadow appearance-none rounded">
-                                <p><strong>Max Gas: </strong>{ethers.formatEther(gasLimit.toString())}</p>
-                            </div>
-                            <div className="text-sm flex mb-6 items-center shadow appearance-none rounded">
-                                <p><strong>Estimated Total: </strong>{ethers.formatEther(trxTotal.toString())}</p>
-                            </div>
-                        </>
-                    )}
-                    <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        <button
-                            className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
-                            type="submit"
-                            id="button-login"
-                            onClick={() => setOpenModal(true)}
-                        >
-                            Next
-                        </button>
-                    </div>
-                    {openModal && (<SignTransaction setCode={setCode} setOpenModal={setOpenModal} tx={trxDetails}/>)}
-                    {showNotification && (<div className="text-sm flex mb-6 items-center shadow appearance-none rounded">
-                        {notificationText}
-                    </div>)}
-                </>
-            </form>
+            <div className="bg-white rounded-lg p-8 max-w-sm mx-auto my-10">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                    }}
+                    className="max-w-[480px]"
+                >
+                    <>
+                        <h2 className="text-2xl text-gray-700 font-bold mb-4">Send Transaction</h2>
+                        <label htmlFor="destination-address" className="mb-2 text-sm font-bold text-gray-700">Destination Address</label>
+                        <div className="flex mb-6 items-center shadow appearance-none border rounded">
+                            <input
+                                className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="destination-address"
+                                name="destinationAddress"
+                                type="text"
+                                placeholder="0x000000000000000000000000000000000000000"
+                                value={destinationAddress}
+                                size={72}
+                                onChange={(e) => {
+                                    handleDestinationAddressChange(e);
+                                }}
+                            />
+                        </div>
+                        <div className="flex mb-6 items-center shadow appearance-none border rounded">
+                            <label htmlFor="amount" className="mb-2 text-sm font-bold text-gray-700">Token Amount</label>
+                            <input
+                                className="text-lg shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="amount"
+                                name="amount"
+                                type="number"
+                                placeholder="Token amount 0.00"
+                                value={amount}
+                                onChange={(e) => {
+                                    handleAmountChange(e);
+                                }}
+                            />
+                        </div>
+                        {gasFlag.current === true && (
+                            <>
+                                <div className="text-sm text-gray-700 flex mb-6 items-center appearance-none rounded">
+                                    <p><strong>Max Gas: </strong>{ethers.formatEther(gasLimit.toString())}</p>
+                                </div>
+                                <div className="text-sm text-gray-700 flex mb-6 items-center appearance-none rounded">
+                                    <p><strong>Estimated Total: </strong>{ethers.formatEther(trxTotal.toString())}</p>
+                                </div>
+                            </>
+                        )}
+                        <div className="flex mb-6 items-center shadow appearance-none border rounded">
+                            <button
+                                className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
+                                type="submit"
+                                id="button-login"
+                                onClick={() => handleNextScreen()}
+                            >
+                                Next
+                            </button>
+                        </div>
+                        {openModal && (<SignTransaction setCode={setCode} setOpenModal={setOpenModal} tx={trxDetails}/>)}
+                        {showNotification && (<div className="text-sm text-red-700 flex mb-6 items-center appearance-none rounded">
+                            {notificationText}
+                        </div>)}
+                    </>
+                </form>
+            </div>
         </>
     )
 }
