@@ -26,9 +26,6 @@ export interface ProviderPayload {
 export const setProvider = (provider: ProviderPayload) => {
     const apiKey = provider.apiKey || provider._apiKey || provider.projectSecret || provider.applicationSecret;
     const applicationId = provider.applicationId || provider.projectId;
-    console.log('props...:', provider);
-    console.log('apiKey...:', apiKey);
-    console.log('applicationId...:', applicationId);
     
     switch (provider.provider) {
         case "Alchemy":
