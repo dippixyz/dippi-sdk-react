@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useDippiContext } from '../DippiProvider';
 export const ResetPasswordForm = () => {
     const [email, setEmail] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [countryCode, setCountryCode] = useState('');
     const { handlePasswordReset, isResetPassword } = useDippiContext();
     const [errorLogin, setErrorLogin] = useState('');
     const [usePassword, setUsePassword] = useState(false);
@@ -11,15 +9,11 @@ export const ResetPasswordForm = () => {
         { email: '', registered_passkey: false },
     ]);
 
-    // const handleCountryChange = (prefix: string) => {
-    //     setCountryCode(prefix);
-    // };
-
     const handleSubmit = async () => {
         if (validateEmail(email)) {
             handlePasswordReset(email);
             if (isResetPassword) {
-                setErrorLogin('Reset password success.');
+                setErrorLogin('Please check your email to reset password.');
             } else {
                 setErrorLogin('Reset password failed.');
             }
@@ -30,7 +24,6 @@ export const ResetPasswordForm = () => {
 
     const resetForm = () => {
         setEmail('');
-        // setPassword('');
     };
 
     const validateEmail = (email: string) => {
@@ -51,20 +44,12 @@ export const ResetPasswordForm = () => {
         return null;
     };
 
-    // const checkForValidPasskey = async (_email: string) => {
-    //     setEmail(_email);
-    //     // authenticatePasskey(_email);
-    // };
-
     const handleEmailChange = (e: any) => {
         setEmail(e.target.value);
         const email = e.target.value;
         if (email === '') {
             setUsePassword(false);
         }
-        // if (validateEmail(e.target.value)) {
-        //     checkForValidPasskey(email);
-        // }
     };
 
     useEffect(() => {
@@ -80,7 +65,6 @@ export const ResetPasswordForm = () => {
     }, []);
 
     useEffect(() => {
-        // resetError();
         resetForm();
     }, []);
 
@@ -117,25 +101,6 @@ export const ResetPasswordForm = () => {
                     }}
                 />
             </div>
-            {/* <div className="mb-8">
-                <input
-                    className="text-xl shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="signin-password"
-                    name="password"
-                    type="password"
-                    autoComplete="webauthn"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <small style={{fontSize: '15px'}}>
-                    {' '}
-                    Forgot your password?{' '}
-                    <a href="/forgot-password" className="text-[#33d4e4]">
-                        Reset it here
-                    </a>
-                </small>
-            </div> */}
             <div className="flex items-center justify-between">
                 <button
                     className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"

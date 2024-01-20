@@ -215,7 +215,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             let reset = await dippiClient.user.resetPassword({email})
             setIsResetPassword(true);
         } catch (error) {
-            setIsResetPassword(false);
+            setIsResetPassword(true);
         }
     };
 
