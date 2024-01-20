@@ -43,7 +43,7 @@ const ConfirmEmail = (props: ConfirmEmailProps) => {
                                         <div className="relative flex flex-col overflow-hidden bg-white">
                                             <div className="max-w-xl px-5 text-center">
                                                 <h2 className="mb-2 text-[42px] font-bold text-zinc-800">Check your inbox</h2>
-                                                <p className="mb-2 text-lg text-zinc-500">We are glad, that you’re with us ? We’ve sent you a verification link to the email address <span className="font-medium text-[#47B0BF]">mail@yourdomain.com</span>.</p>
+                                                <p className="mb-2 text-lg text-zinc-500">We are glad, that you’re with us ? We’ve sent you a verification link to the email address <span className="font-medium text-[#47B0BF]">{props.email}</span>.</p>
                                                 <div className="mt-3 inline-block rounded-full bg-[#47B0BF] p-3">
                                                     <div className="w-6 h-6 border-t-2 border-white border-solid rounded-full animate-spin spin-animation"></div>
                                                 </div>
@@ -53,7 +53,7 @@ const ConfirmEmail = (props: ConfirmEmailProps) => {
                                         <div className="relative flex flex-col overflow-hidden bg-white">
                                             <div className="max-w-xl px-5 text-center">
                                                 <h2 className="mb-2 text-[42px] font-bold text-zinc-800">Check your inbox</h2>
-                                                <p className="mb-2 text-lg text-zinc-500">We are glad, that you’re with us ? We’ve sent you a verification link to the email address <span className="font-medium text-[#47B0BF]">mail@yourdomain.com</span>.</p>
+                                                <p className="mb-2 text-lg text-zinc-500">We are glad, that you’re with us ? We’ve sent you a verification link to the email address <span className="font-medium text-[#47B0BF]">{props.email}</span>.</p>
                                                 <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
                                                     <path fill="currentColor"
                                                         d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z">

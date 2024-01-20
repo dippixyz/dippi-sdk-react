@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Dippi } from '@dippixyz/base';
 import { DippiProviderProps , User} from '../../interfaces/authContext';
 import { UserDippiResponseBody } from '../../interfaces/users.interface';
-import { ParamsCreateWallet, Wallet } from '../../interfaces/wallet.interface';
+import { ParamsCreateWallet } from '../../interfaces/wallet.interface';
 import { addObjectToDB } from '../../utils/functions/indexDB';
 
 interface ChangePasswordPayload {
@@ -22,7 +22,7 @@ interface AuthContextType {
     handleSignUp: (userData: User) => void;
     createWallet: (params: ParamsCreateWallet) => void;
     handlePasswordChange: (changePasswordData: ChangePasswordPayload) => void;
-  logout: () => void;
+    disconnect: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,13 +33,32 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
     const [user, setUser] = useState<UserDippiResponseBody | null>(null);
     const [address, setAddress] = useState<string>('');
     const [isConnected, setIsConnected] = useState<boolean>(false);
-    // Basar el proceso de autenticacion del usuario con una variable de estado
-    // signUpStatus == 'initial' : Significa que el usuario no ha iniciado el proceso de autenticacion
-    // signUpStatus == 'waitingEmailVerification : Significa que se esta esperando la verificacion del correo electronico del usuario
-    // signUpStatus == 'verified' : Significa que el usuario ya verifico su correo electronico
-    // signUpStatus == 'waitingEncryptKeyCode' : Significa que esta esperando que el usuario ingrese su clave de encriptacion
-    // signUpStatus == 'completed' : Significa que el usuario ya completo el proceso de autenticacion
     const [signUpStatus, setSignUpStatus] = useState('initial');
+
+    // Create two useEffects, one by when the component is mounted and another by when the variable user, addreess, signUpStatus or isConnected changes
+
+    useEffect(() => {
+        const storedUserData = localStorage.getItem('dippiUserData');
+        if (storedUserData) {
+            const userData = JSON.parse(storedUserData);
+            setUser(userData.user);
+            setError(userData.error);
+            setSignUpStatus(userData.signUpStatus);
+            setAddress(userData.address);
+            setIsConnected(userData.isConnected);
+        }
+    }, []);
+    
+    useEffect(() => {
+        localStorage.setItem('dippiUserData', JSON.stringify({ 
+            user, 
+            error, 
+            signUpStatus, 
+            address, 
+            isConnected 
+        }));
+    }, [user, error, signUpStatus, address, isConnected]);
+    
     const dippiClient = new Dippi({
         appToken: config.appToken,
         appId: config.appId,
@@ -50,7 +69,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
 
-        const user = await dippiClient.user.createProfile({
+        const response = await dippiClient.user.createProfile({
             email: userData.email,
             password: userData.password,
             applicationId: config.appId,
@@ -58,31 +77,27 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             phone: ""
         });
 
-        // si da error al crear el usuario, entonces mostrar el error en pantalla
-        // createProfile(data: UserCreatePayload): Promise<UserResponseBody>; hay que agregar los errores en los tipos del SDK base
-
-        if (!user.id) {
-            console.log('error al crear el usuario >>>>>>>>>>>', user);
-            setError('Error to create user');
+        if ('error' in response) {
+            setError(response.message);
             return;
         }
 
+        const user = response as UserDippiResponseBody;
+
         if(user.isVerified === false) {
             setSignUpStatus('waitingEmailVerification');
-            setUser(user as UserDippiResponseBody | null);
+            setUser(user);
             confirmEmailVerification(user.id);
-            console.log('signUpStatus >>>>>>>>>>>', signUpStatus, 'waitingEmailVerification');
         };
-
-        console.log('user SignUp>>>>>>>>>>>', user);
     };
 
     const handleSignIn = async (userData: User) => {
 
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
+        setError('');
 
-        const user = await dippiClient.user.authenticate({
+        const response = await dippiClient.user.authenticate({
             email: userData.email,
             password: userData.password,
             token: config.appToken,
@@ -91,30 +106,34 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         });
 
         // La respuesta de authenticate esta mal tipado en el SDK base
-        setIsConnected(true);
-        console.log('user SignIn>>>>>>>>>>>', user);
-        
-    };
+        if ('error' in response) {
+            setError(response.message);
+            return;
+        }
 
-    // crear una funcion que reciba el id del usuario y quede preguntando cada 5 segundos si el usuario ya verifico su correo electronico
-    // utilizando el metodo dippiClient.user.getProfile(id) y el atributo isVerified del objeto que retorna
-    // si el usuario ya verifico su correo electronico, entonces setSignUpStatus('verified')
+        const user = response.user as UserDippiResponseBody;
+        setIsConnected(true);
+        setUser(user as UserDippiResponseBody | null);
+        setSignUpStatus('completed');
+        setAddress(response.walletAddress)        
+    };
 
     async function confirmEmailVerification(id: string) {
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
 
-        let user = await dippiClient.user.getProfile(id);
-        console.log('get user profile >>>>>>>>>>>', user);
+        const response = await dippiClient.user.getProfile(id);
+        if ('error' in response) {
+            setError(response.message);
+            return;
+        }
+        const user = response as UserDippiResponseBody;
 
         if(user.isVerified === true) {
             setSignUpStatus('verified');
             setUser(user);
-            console.log('signUpStatus >>>>>>>>>>>', signUpStatus, 'verified');
-            // esperar 5 segundos y luego cambiar a estado waitingEncryptKeyCode
             setTimeout(() => {
                 setSignUpStatus('waitingEncryptKeyCode');
-                console.log('signUpStatus >>>>>>>>>>>', signUpStatus, 'waitingEncryptKeyCode');
             }, 3000);
         } else {
             setTimeout(() => {
@@ -129,7 +148,6 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         dippiClient.setAuthToken(accessToken);
         if (!user) return;
 
-        console.log('create Wallet ..... >>>>>>>>>>>>>', user)
         const wallet = await dippiClient.wallet.create({
             ownerId: user.id,
             walletType: "Polygon",
@@ -151,39 +169,42 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             environment: params.environment,
         });
 
-        console.log('wallet >>>>>>>>>>>', wallet);
-        /// TODO : Hay que agregar en los tipos del SDK base el atributo privateKey a la interface WalletResponseBody
-        if (wallet && 'privateKey' in wallet && typeof wallet.privateKey === 'string') {
-            console.log('saving private key in indexedDB >>>>>>>>>>>', wallet.privateKey);
+        if (!wallet.id){
+            setError('Error creating wallet');
+            return;
+        } else {
+
             setAddress(wallet.address);
             setIsConnected(true);
-            const response = await addObjectToDB({
+            await addObjectToDB({
                 id: wallet.ownerId,
                 value: wallet.privateKey,
             });
             setSignUpStatus('completed');
-            console.log('saved private key in indexedDB >>>>>>>>>>>', response);
         }
     }
 
 
-  const handlePasswordChange = async (changePasswordData: ChangePasswordPayload) => {
+    const handlePasswordChange = async (changePasswordData: ChangePasswordPayload) => {
+        
+        const { accessToken } = await dippiClient.auth.login();
+        dippiClient.setAuthToken(accessToken);
 
-    const { accessToken } = await dippiClient.auth.login();
-    dippiClient.setAuthToken(accessToken);
+        const response = await dippiClient.user.changePassword({
+            userEmail: changePasswordData.userEmail,
+            oldPassword: changePasswordData.oldPassword,
+            password: changePasswordData.password,
+            repeatedPassword: changePasswordData.repeatedPassword
+        });
+    };
 
-    let change = await dippiClient.user.changePassword({
-      userEmail: changePasswordData.userEmail,
-      oldPassword: changePasswordData.oldPassword,
-      password: changePasswordData.password,
-      repeatedPassword: changePasswordData.repeatedPassword
-    });
-
-    console.log('change password...:', change);
-  };
-
-    const logout = () => {
+    const disconnect = () => {
         setUser(null);
+        setAddress('');
+        setIsConnected(false);
+        setSignUpStatus('initial');
+        setError('');
+        localStorage.removeItem('dippiUserData');
     };
 
     return (
@@ -197,8 +218,10 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
                 handleSignIn, 
                 handleSignUp,
                 handlePasswordChange,
+                handleSignUp, 
+                handlePasswordChange,
                 createWallet,
-                logout 
+                disconnect 
             }}>
             {children}
         </AuthContext.Provider>
@@ -212,3 +235,10 @@ export function useDippiContext() {
     }
     return context;
 }
+
+// Basar el proceso de autenticacion del usuario con una variable de estado
+// signUpStatus == 'initial' : Significa que el usuario no ha iniciado el proceso de autenticacion
+// signUpStatus == 'waitingEmailVerification : Significa que se esta esperando la verificacion del correo electronico del usuario
+// signUpStatus == 'verified' : Significa que el usuario ya verifico su correo electronico
+// signUpStatus == 'waitingEncryptKeyCode' : Significa que esta esperando que el usuario ingrese su clave de encriptacion
+// signUpStatus == 'completed' : Significa que el usuario ya completo el proceso de autenticacion

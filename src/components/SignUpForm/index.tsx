@@ -100,13 +100,7 @@ export const SignUpForm = () => {
                 {!!error && (
                     <AlertError title="Error" message={error} />
                 )}
-
-                {!!error && (
-                    <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                        {error}
-                    </div>
-                )}
-
+                
                 {/^\+?\d+$/.test(email) && (
                     <div className="mb-6 -space-y-px items-center shadow appearance-none border rounded">
                     </div>
