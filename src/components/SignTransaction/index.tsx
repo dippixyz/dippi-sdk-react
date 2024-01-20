@@ -77,24 +77,26 @@ const SignTransaction = ({ setCode, setOpenModal, tx }: SignTransactionProps) =>
                                                 You are about to sign and send a transaction!
                                             </Dialog.Title>
                                             <br />
-                                            <div className='text-sm space-y-3'>
-                                                <p><strong>To: </strong>{tx.to}</p>
-                                                <p />
+                                            <div className='text-left'>
+                                                <div className='text-sm space-y-3'>
+                                                    <p><strong>To: </strong>{tx.to}</p>
+                                                    <p />
+                                                </div>
+                                                <hr />
+                                                <div className='text-sm space-y-3'>
+                                                    <p />
+                                                    <p><strong>Amount: </strong>{formatEther(tx.value)}</p>
+                                                    <p><strong>Max Gas: </strong>{formatEther(tx.gasLimit)}</p>
+                                                    <p />
+                                                </div>
+                                                <hr />
+                                                <div className='text-sm space-y-3'>
+                                                    <p />
+                                                    <p><strong>Estimated Total: </strong>{formatEther(tx.trxTotal)}</p>
+                                                    <p />
+                                                </div>
+                                                <hr />
                                             </div>
-                                            <hr />
-                                            <div className='text-sm space-y-3'>
-                                                <p />
-                                                <p><strong>Amount: </strong>{formatEther(tx.value)}</p>
-                                                <p><strong>Max Gas: </strong>{formatEther(tx.gasLimit)}</p>
-                                                <p />
-                                            </div>
-                                            <hr />
-                                            <div className='text-sm space-y-3'>
-                                                <p />
-                                                <p><strong>Estimated Total: </strong>{formatEther(tx.trxTotal)}</p>
-                                                <p />
-                                            </div>
-                                            <hr />
                                             <p />
                                             <div className="mt-2">
                                                 <ContentModal
