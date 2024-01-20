@@ -1,6 +1,6 @@
 {
   "name": "@dippixyz/react-sdk",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Dippi React SDK to implement Dippi SDK functionalities.",
   "main": "index.tsx",
   "scripts": {
@@ -18,6 +18,8 @@
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "autoprefixer": "^10.4.16",
+    "crypto-js": "^4.2.0",
+    "ethers": "^6.10.0",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -26,10 +28,11 @@
     "wagmi": "^1.4.4"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.1",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "postcss-cli": "^11.0.0",
     "tsup": "^8.0.1"
   }
 }
-

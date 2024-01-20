@@ -18,10 +18,13 @@ interface AuthContextType {
     signUpStatus: string;
     address : string;
     isConnected: boolean;
+    isResetPassword: boolean;
+    isChangedPassword: boolean;
     handleSignIn: (userData: User) => void;
     handleSignUp: (userData: User) => void;
     createWallet: (params: ParamsCreateWallet) => void;
     handlePasswordChange: (changePasswordData: ChangePasswordPayload) => void;
+    handlePasswordReset: (email: string) => void;
     disconnect: () => void;
 }
 
@@ -33,6 +36,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
     const [user, setUser] = useState<UserDippiResponseBody | null>(null);
     const [address, setAddress] = useState<string>('');
     const [isConnected, setIsConnected] = useState<boolean>(false);
+    const [isResetPassword, setIsResetPassword] = useState<boolean>(false);
+    const [isChangedPassword, setIsChangedPassword] = useState<boolean>(false);
     const [signUpStatus, setSignUpStatus] = useState('initial');
 
     // Create two useEffects, one by when the component is mounted and another by when the variable user, addreess, signUpStatus or isConnected changes
@@ -184,18 +189,34 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         }
     }
 
-
     const handlePasswordChange = async (changePasswordData: ChangePasswordPayload) => {
         
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
 
-        const response = await dippiClient.user.changePassword({
-            userEmail: changePasswordData.userEmail,
-            oldPassword: changePasswordData.oldPassword,
-            password: changePasswordData.password,
-            repeatedPassword: changePasswordData.repeatedPassword
-        });
+        try {
+            let change = await dippiClient.user.changePassword({
+                userEmail: changePasswordData.userEmail,
+                oldPassword: changePasswordData.oldPassword,
+                password: changePasswordData.password,
+                repeatedPassword: changePasswordData.repeatedPassword
+            });
+            setIsChangedPassword(true);
+        } catch (error) {
+            setIsChangedPassword(false);
+        }
+
+    };
+
+    const handlePasswordReset = async (email: string) => {
+        const { accessToken } = await dippiClient.auth.login();
+        dippiClient.setAuthToken(accessToken);
+        try {
+            let reset = await dippiClient.user.resetPassword({email})
+            setIsResetPassword(true);
+        } catch (error) {
+            setIsResetPassword(true);
+        }
     };
 
     const disconnect = () => {
@@ -215,9 +236,12 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
                 error,
                 address,
                 isConnected,
+                isResetPassword,
+                isChangedPassword,
                 handleSignIn, 
-                handleSignUp, 
+                handleSignUp,
                 handlePasswordChange,
+                handlePasswordReset,
                 createWallet,
                 disconnect 
             }}>

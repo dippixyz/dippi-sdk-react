@@ -33,7 +33,7 @@ export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps )
 
     return (
         <>
-            {/* <div className="modalContainer"> */}
+            <div className="bg-white rounded-lg p-8 max-w-sm mx-auto my-10">
                 {/* Sign Up Form Fields */}
                 <button
                     onClick={onClose}
@@ -64,22 +64,18 @@ export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps )
                         }
                         const change = handlePasswordChange_( {userEmail: email, oldPassword, password, repeatedPassword: repeatPassword} )
                     }}
-                    className="max-w-[320px]"
+                    className="max-w-[480px]"
                 >
+                    <h2 className="text-2xl text-gray-700 font-bold mb-4">Change Password</h2>
                     {!!errorLogin && (
-                        <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
+                        <div className="text-lg mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
                             {errorLogin}
                         </div>
                     )}
                     <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        {/* <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="email"
-                        >
-                            Email:
-                        </label> */}
+                        <label htmlFor="signin-email" className="mb-2 text-sm font-bold text-gray-700 w-36">Email: </label>
                         <input
-                            className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="signin-email"
                             name="email"
                             type="text"
@@ -90,30 +86,20 @@ export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps )
                         />
                     </div>
                     <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        {/* <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="old-password"
-                        >
-                            Old Password:
-                        </label> */}
+                        <label htmlFor="current-password" className="mb-2 text-sm font-bold text-gray-700 w-36">Current Password: </label>
                         <input
-                            className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="old-password"
-                            name="oldPassword"
+                            className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="current-password"
+                            name="currentPassword"
                             type="password"
-                            placeholder="Old Password"
+                            placeholder="Current Password"
                             onChange={handleOldPasswordChange}
                         />
                     </div>
                     <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        {/* <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="signin-password"
-                        >
-                            New Password:
-                        </label> */}
+                        <label htmlFor="signin-password" className="mb-2 text-sm font-bold text-gray-700 w-36">New Password: </label>
                         <input
-                            className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="signin-password"
                             name="password"
                             type="password"
@@ -122,14 +108,9 @@ export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps )
                         />
                     </div>
                     <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                        {/* <label
-                            className="block text-gray-700 text-sm font-bold mb-2"
-                            htmlFor="repeat-password"
-                        >
-                            Repeat New Password:
-                        </label> */}
+                        <label htmlFor="repeat-password" className="mb-2 text-sm font-bold text-gray-700 w-36">Repeat Password: </label>
                         <input
-                            className="text-xl w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="repeat-password"
                             name="repeatPassword"
                             type="password"
@@ -146,7 +127,7 @@ export const ChangePasswordForm = ( {onClose, email }: ChangePasswordFormProps )
                         </button>
                     </div>
                 </form>
-            {/* </div> */}
+            </div>
         </>
     );
 };

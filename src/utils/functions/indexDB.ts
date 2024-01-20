@@ -12,7 +12,9 @@ export const openDB = () => {
 
         request.onupgradeneeded = () => {
             const db = request.result;
+            
             if (!db.objectStoreNames.contains(STORE_NAME)) {
+                
                 db.createObjectStore(STORE_NAME, {
                     keyPath: 'id',
                     autoIncrement: true,
@@ -42,29 +44,32 @@ export const addObjectToDB = async (data: { id: string, value: string}) => {
         const transaction = db.transaction(STORE_NAME, 'readwrite');
         const store = transaction.objectStore(STORE_NAME);
         // check if the object already exists
-        const object = store.get(data.id);
+        const request = store.get(data.id);
 
-        try {
-            if (object.result !== undefined) {
-                const request = store.put(data);
-                request.onsuccess = () => {
+        request.onsuccess = () => {
+            
+            if (request.result !== undefined) {
+                const putRequest = store.put(data);
+                putRequest.onsuccess = () => {
                     resolve();
                 };
-                request.onerror = () => {
-                    reject(request.error);
+                putRequest.onerror = () => {
+                    reject(putRequest.error);
+                };
+            } else {
+                const addRequest = store.add(data);
+                addRequest.onsuccess = () => {
+                    resolve();
+                };
+                addRequest.onerror = () => {
+                    reject(addRequest.error);
                 };
             }
-        } catch (error) {}
+        };
 
-        try {
-            const request = store.add(data);
-            request.onsuccess = () => {
-                resolve();
-            };
-            request.onerror = () => {
-                reject(request.error);
-            };
-        } catch (error) {}
+        request.onerror = () => {
+            reject(request.error);
+        };
     });
 };
 
