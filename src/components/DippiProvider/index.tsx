@@ -195,7 +195,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
                 address,
                 isConnected,
                 handleSignIn, 
-                handleSignUp, 
+                handleSignUp,
+                handlePasswordChange,
                 createWallet,
                 logout 
             }}>
