@@ -32,25 +32,8 @@ const ContentModal = ({ setCode, setOpenModal }: ContentModalProps) => {
         }
     };
 
-    // const myHandleSetCode = () => {
-    //     const code = codes.join('');
-    //     console.log('code to decrypt key .....', code);
-    //     if (code.length === 4) {
-    //         setCode(code);
-    //         setOpenModal(false);
-
-    //         const safeWallet = {
-    //             id: '1',
-    //             value: code,
-    //         };
-
-    //         await addObjectToDB(safeWallet);
-    //     }
-    // };
-
     async function myHandleSetCode() {
         const code = codes.join('');
-        console.log('code to decrypt key .....', code);
         if (code.length === 4) {
             setCode(code);
             setOpenModal(false);

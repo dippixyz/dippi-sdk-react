@@ -64,9 +64,7 @@ export const TransactionForm = (props: ProviderPayload) => {
 
                 signer.sendTransaction(tx)
                     .then((txResult) => {
-                        console.log('txResult...:', txResult);
                         provider.getNetwork().then((network: ethers.Network) => {
-                            console.log('chainId...:', network.chainId);
                             const txUrl = getExplorerUrl(parseInt(network.chainId.toString()), txResult.hash);
                             const txLink = <a href={txUrl} target="_blank" rel="noopener noreferrer" className="text-red-500 overflow-auto whitespace-normal">{'Transaction completed with hash: ' + txResult.hash}</a>;
                             setNotificationText(txLink);
@@ -74,7 +72,6 @@ export const TransactionForm = (props: ProviderPayload) => {
                         });
                     })
                     .catch((error) => {
-                        console.log('error sending transaction...:', error);
                         let extractedText = error.message.substring(0, error.message.indexOf('('));
                         setNotificationText("error: " + extractedText);
                         setShowNotification(true);
@@ -105,7 +102,6 @@ export const TransactionForm = (props: ProviderPayload) => {
     }
 
     const handleNextScreen = () => {
-        console.log('handleNextScreen...', isConnected);
         
         if (!isConnected) {
             setNotificationText(
