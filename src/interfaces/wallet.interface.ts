@@ -10,6 +10,7 @@ export interface Wallet {
     privateKey: string;
     recoveryPhrase: string;
     isKeyppiProtected: boolean;
+    fileId: string;
 }
 
 export interface NFTSImages {
@@ -189,3 +190,8 @@ export interface TbaBalance {
     tokenBalances: TokenBalance[];
     transfers: Transfer[];
 }
+
+export interface ParamsCreateWallet {
+    userCode: string;
+    environment: 'Main Net' | 'Test Net';
+};

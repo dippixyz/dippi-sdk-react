@@ -18,3 +18,29 @@ export interface User {
     isVerified: boolean;
     wallets: Wallet[];
 }
+
+export interface UserDippiResponseBody {
+    id: string;
+    password: string;
+    name: string;
+    email: string;
+    phone: string;
+    isVerified: boolean;
+    isActive: boolean;
+    referralCode: string;
+    referrerId: string;
+    dipTokenBalance: number;
+    dipInitMineTime: Date;
+    dipInitMineAmount: number;
+    dipInitReferredCount: number;
+    currentChallenge: string;
+    singupState: string;
+    applicationId: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface ConfirmEmailProps {
+    success: boolean;
+    email?: string;
+} 

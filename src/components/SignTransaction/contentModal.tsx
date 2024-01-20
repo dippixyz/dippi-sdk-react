@@ -32,7 +32,6 @@ const ContentModal = ({ setCode, setOpenModal }: ContentModalProps) => {
         }
     };
 
-
     async function myHandleSetCode() {
         const code = codes.join('');
         if (code.length === 4) {
@@ -59,10 +58,10 @@ const ContentModal = ({ setCode, setOpenModal }: ContentModalProps) => {
                     >
                         <div className="flex flex-row text-sm font-medium text-gray-500 mb-2">
                             <span>
-                                This will be your unique{' '}
-                                <strong>secret code</strong> used to encrypt
-                                your key. Make sure you can remember it safely
-                                and store it in a secure place.
+                                {/* This will be your unique{' '} */}
+                                Inputting a correct {' '}
+                                <strong>secret code</strong> will sign
+                                and send this transaction.
                             </span>
                         </div>
                     </div>
@@ -101,7 +100,7 @@ const ContentModal = ({ setCode, setOpenModal }: ContentModalProps) => {
                                 className="inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                 onClick={() => myHandleSetCode()}
                             >
-                                Retrieve
+                                Sign
                             </button>
                             <button
                                 type="button"

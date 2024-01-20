@@ -4,8 +4,9 @@
     left: 50%;
     transform : translate(-50%,-50%);
     background-color: #fff;
-    padding: 50px;
+    padding: 10px;
     z-index: 1000;
+    min-width: 350px;
 }
 
 .centered-image {
