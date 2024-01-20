@@ -95,10 +95,8 @@ export const SignInForm = () => {
                     className="max-w-[320px]"
                 >
                 
-                    {!!errorLogin && (
-                        <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                            {errorLogin}
-                        </div>
+                    {!!error && (
+                        <AlertError title="Error" message={error} />
                     )}
 
                     {/^\+?\d+$/.test(email) && (
