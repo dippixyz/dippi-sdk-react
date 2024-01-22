@@ -15,3 +15,30 @@
     display: block;
     margin-bottom: 20px;
 }
+
+.title-disconnect {
+    font-size: 20px;
+    font-weight: 500;
+    padding-top: 15px;
+}
+
+.circle {
+    width: 70px;
+    height: 70px;
+    background: radial-gradient( circle, #FFC9FF, #01B0CA, #07fac9);
+    border-radius: 50%;
+    margin: auto;
+}  
+
+.copied-text {
+    animation: colorChange 0.5s ease;
+}
+
+@keyframes colorChange {
+    0% {
+        color: inherit;
+    }
+    100% {
+        color: green; /* Cambiar a un color que indique éxito (por ejemplo, verde) */
+    }
+}
