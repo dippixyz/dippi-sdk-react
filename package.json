@@ -14,7 +14,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@dippixyz/base": "^1.2.7",
+    "@dippixyz/base": "^1.2.8",
     "@headlessui/react": "^1.7.18",
     "@heroicons/react": "^2.1.1",
     "autoprefixer": "^10.4.16",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDippiContext } from '../DippiProvider';
 import AlertError from '../AlertError';
 

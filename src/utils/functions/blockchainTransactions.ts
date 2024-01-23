@@ -3,7 +3,7 @@ import { BigNumberish } from 'ethers';
 export interface transactionDetails {
     to: string;
     value: BigNumberish;
-    gasCost: bigint;
+    gasCost: BigNumberish;
     gasLimit: BigNumberish;
     trxTotal: BigNumberish;
 };
