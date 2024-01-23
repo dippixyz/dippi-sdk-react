@@ -1,4 +1,5 @@
 // import { AuthenticationResponseJSON } from '@simplewebauthn/typescript-types';
+import { ReactNode } from 'react';
 
 export interface SignInConnectWalletPayloadType {
     address: string;
@@ -25,3 +26,17 @@ export interface PasskeySignInPayloadType {
     email: string;
     id: string;
 }
+
+export interface DippiProviderProps {
+    children: ReactNode;
+    config: {
+        appToken: string;
+        appId: string;
+        url: string;
+    };
+}
+
+export type User = {
+    email: string;
+    password: string;
+};

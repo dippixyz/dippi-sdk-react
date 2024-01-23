@@ -1,6 +1,6 @@
 {
   "name": "@dippixyz/react-sdk",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "Dippi React SDK to implement Dippi SDK functionalities.",
   "main": "index.tsx",
   "scripts": {
@@ -10,21 +10,26 @@
   "author": "José Barrientos, Víctor Amaya & Atahualpa Erazo",
   "license": "ISC",
   "repository": "https://github.com/dippixyz/dippi-sdk-react.git",
-  
   "publishConfig": {
     "access": "public"
-},
+  },
   "dependencies": {
-    "@dippixyz/base-sdk": "1.1.1",
+    "@dippixyz/base": "^1.2.8",
+    "@headlessui/react": "^1.7.18",
+    "@heroicons/react": "^2.1.1",
     "autoprefixer": "^10.4.16",
+    "crypto-js": "^4.2.0",
+    "ethers": "^6.10.0",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "wagmi": "^1.4.4",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "wagmi": "^1.4.4"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.1",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "postcss-cli": "^11.0.0",
