@@ -33,16 +33,13 @@ export const TransactionForm = (props: ProviderPayload) => {
         'Your private key has been copied to your clipboard!',
     );
     const [invalidCode, setInvalidCode] = useState<boolean>(false);
+    const [isValidAmount, setIsValidAmount] = useState<boolean>(false);
 
     let provider = setProvider(props);
-
+    
     if (!provider) {
         return null;
     }
-
-    provider.getBalance(address).then((balance) => {
-        setWalletBalance(balance);
-    });
 
     const decryptAndSign = (code: string) => {
         const encryptionKey = code;
@@ -159,14 +156,9 @@ export const TransactionForm = (props: ProviderPayload) => {
         if (provider && amount > 0 && ethers.isAddress(destinationAddress)) {
             quoteTransaction(provider)
             .then(() => {
-                // Handle the result of quoteTransaction here
-                console.log('quoted trx successfully');
+                setError(null);
             })
             .catch((error: any) => {
-                console.log('error quoting trx...:', error);
-                
-                // Handle any errors here
-                // console.error(error);
                 setError(error);
             });
         }
@@ -186,6 +178,24 @@ export const TransactionForm = (props: ProviderPayload) => {
             setDecryptCodeFlag(false);
         }
     }, [invalidCode, showNotification, decryptCodeFlag]);
+
+    useEffect(() => {
+        if (address) {
+            provider.getBalance(address).then((balance) => {
+                setWalletBalance(balance);
+            });
+        }   
+    }
+    , [address]);
+
+    useEffect(() => {
+        const walletBalanceNumber = parseFloat(ethers.formatEther(walletBalance.toString()));
+        if (amount > 0 && amount <= walletBalanceNumber) {
+            setIsValidAmount(true);
+        } else {
+            setIsValidAmount(false);
+        }
+    }, [amount, walletBalance]);
 
     return (
         <>
@@ -232,7 +242,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                         <div className="flex mb-6 items-center shadow appearance-none border rounded">
                             <label htmlFor="amount" className="mb-2 text-xs font-bold text-gray-700">Token Amount</label>
                             <input
-                                className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                className={`text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${isValidAmount ? 'border-green-500' : 'border-red-500'}`}
                                 id="amount"
                                 name="amount"
                                 type="number"
@@ -262,6 +272,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                                 type="submit"
                                 id="button-login"
                                 onClick={() => handleNextScreen()}
+                                disabled={!isValidAmount}
                             >
                                 Next
                             </button>
