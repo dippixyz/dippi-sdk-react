@@ -20,6 +20,7 @@ interface AuthContextType {
     isConnected: boolean;
     isResetPassword: boolean;
     isChangedPassword: boolean;
+    waitingResponse: boolean;
     handleSignIn: (userData: User) => void;
     handleSignUp: (userData: User) => void;
     createWallet: (params: ParamsCreateWallet) => void;
@@ -39,8 +40,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
     const [isResetPassword, setIsResetPassword] = useState<boolean>(false);
     const [isChangedPassword, setIsChangedPassword] = useState<boolean>(false);
     const [signUpStatus, setSignUpStatus] = useState('initial');
-
-    // Create two useEffects, one by when the component is mounted and another by when the variable user, addreess, signUpStatus or isConnected changes
+    const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
 
     useEffect(() => {
         const storedUserData = localStorage.getItem('dippiUserData');
@@ -63,6 +63,15 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             isConnected 
         }));
     }, [user, error, signUpStatus, address, isConnected]);
+
+    useEffect(() => {
+        if (error || isResetPassword) {
+            setTimeout(() => {
+                setError('');
+                setIsResetPassword(false);
+            }, 5000);
+        }
+    }, [error, isResetPassword]);
     
     const dippiClient = new Dippi({
         appToken: config.appToken,
@@ -71,8 +80,10 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
     });
 
     const handleSignUp = async (userData: User) => {
+        setWaitingResponse(true);
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
+        setError('');
 
         const response = await dippiClient.user.createProfile({
             email: userData.email,
@@ -84,6 +95,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
 
         if ('error' in response) {
             setError(response.message);
+            setWaitingResponse(false);
             return;
         }
 
@@ -93,15 +105,16 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             setSignUpStatus('waitingEmailVerification');
             setUser(user);
             confirmEmailVerification(user.id);
+            setWaitingResponse(false);
         };
     };
 
     const handleSignIn = async (userData: User) => {
 
+        setWaitingResponse(true);
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
         setError('');
-
         const response = await dippiClient.user.authenticate({
             email: userData.email,
             password: userData.password,
@@ -110,9 +123,9 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             countryCode: ""
         });
 
-        // La respuesta de authenticate esta mal tipado en el SDK base
         if ('error' in response) {
             setError(response.message);
+            setWaitingResponse(false);
             return;
         }
 
@@ -120,7 +133,8 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         setIsConnected(true);
         setUser(user as UserDippiResponseBody | null);
         setSignUpStatus('completed');
-        setAddress(response.walletAddress)        
+        setAddress(response.walletAddress)  
+        setWaitingResponse(false);      
     };
 
     async function confirmEmailVerification(id: string) {
@@ -212,10 +226,14 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         const { accessToken } = await dippiClient.auth.login();
         dippiClient.setAuthToken(accessToken);
         try {
-            let reset = await dippiClient.user.resetPassword({email})
-            setIsResetPassword(true);
+            const response = await dippiClient.user.resetPassword({email});
+            if (response.status === 200) {
+                setIsResetPassword(true);
+            } else {
+                setIsResetPassword(false);
+            }
         } catch (error) {
-            setIsResetPassword(true);
+            setIsResetPassword(false);
         }
     };
 
@@ -238,6 +256,7 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
                 isConnected,
                 isResetPassword,
                 isChangedPassword,
+                waitingResponse,
                 handleSignIn, 
                 handleSignUp,
                 handlePasswordChange,
@@ -257,10 +276,3 @@ export function useDippiContext() {
     }
     return context;
 }
-
-// Basar el proceso de autenticacion del usuario con una variable de estado
-// signUpStatus == 'initial' : Significa que el usuario no ha iniciado el proceso de autenticacion
-// signUpStatus == 'waitingEmailVerification : Significa que se esta esperando la verificacion del correo electronico del usuario
-// signUpStatus == 'verified' : Significa que el usuario ya verifico su correo electronico
-// signUpStatus == 'waitingEncryptKeyCode' : Significa que esta esperando que el usuario ingrese su clave de encriptacion
-// signUpStatus == 'completed' : Significa que el usuario ya completo el proceso de autenticacion
