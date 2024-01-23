@@ -1,22 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useDippiContext } from '../DippiProvider';
 import AlertError from '../AlertError';
-
 import { ResetPasswordForm } from '../ResetPasswordForm';
 
 export const SignInForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {  handleSignIn , error} = useDippiContext();
+    const {  handleSignIn , error, waitingResponse } = useDippiContext();
     const [usePassword, setUsePassword] = useState(false);
     const [users, setUsers] = useState([
         { email: '', registered_passkey: false },
     ]);
     const [showPasswordReset, setShowPasswordReset] = useState<boolean>(false);
-
-    // const handleCountryChange = (prefix: string) => {
-    //     setCountryCode(prefix);
-    // };
 
     const handleSubmit = async () => {
         handleSignIn({ email, password });
@@ -78,7 +73,6 @@ export const SignInForm = () => {
     }, []);
 
     useEffect(() => {
-        // resetError();
         resetForm();
     }, []);
 
@@ -147,9 +141,21 @@ export const SignInForm = () => {
                         <button
                             className="text-xl bg-[#01b1ca] hover:bg-[#01b1ca] w-full text-white font-bold py-4 px-4 rounded focus:outline-none focus:shadow-outline"
                             type="submit"
+                            disabled={waitingResponse}
                             id="button-login"
                         >
-                            Sign In
+                            {
+                                waitingResponse ? (
+                                    <div
+                                        className="inline-block h-6 w-6 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                                        role="status"
+                                    >
+                                        <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"></span>
+                                    </div>
+                                ) : (
+                                    'Sign In'
+                                )
+                            }
                         </button>
                     </div>
                 </form>

@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useDippiContext } from '../DippiProvider';
+import AlertSuccess from '../AlertSuccess';
+
 export const ResetPasswordForm = () => {
     const [email, setEmail] = useState('');
     const { handlePasswordReset, isResetPassword } = useDippiContext();
-    const [errorLogin, setErrorLogin] = useState('');
     const [usePassword, setUsePassword] = useState(false);
     const [users, setUsers] = useState([
         { email: '', registered_passkey: false },
     ]);
+    const [responseMessage, setResponseMessage] = useState('');
 
     const handleSubmit = async () => {
         if (validateEmail(email)) {
             handlePasswordReset(email);
-            if (isResetPassword) {
-                setErrorLogin('Please check your email to reset password.');
-            } else {
-                setErrorLogin('Reset password failed.');
-            }
         } else {
-            setErrorLogin('Invalid email');
+            setResponseMessage('Invalid email');
         }
     };
 
@@ -68,6 +65,15 @@ export const ResetPasswordForm = () => {
         resetForm();
     }, []);
 
+    useEffect(() => {
+        if (isResetPassword) {
+            setResponseMessage('Check your email for instructions');
+            setEmail('');
+        } else {
+            setResponseMessage('Error resetting password');
+        }
+    }, [isResetPassword]);
+
     return (
         <form
             onSubmit={(e) => {
@@ -76,11 +82,9 @@ export const ResetPasswordForm = () => {
             }}
             className="max-w-[320px]"
         >
-         
-            {!!errorLogin && (
-                <div className="mb-4 px-4 py-2 bg-red-50 text-red-500 border-2 border-red-500 rounded-md">
-                    {errorLogin}
-                </div>
+
+            {!!isResetPassword && (
+                <AlertSuccess message={responseMessage} />
             )}
 
             {/^\+?\d+$/.test(email) && (
