@@ -42,8 +42,6 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
     const [signUpStatus, setSignUpStatus] = useState('initial');
     const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
 
-    // Create two useEffects, one by when the component is mounted and another by when the variable user, addreess, signUpStatus or isConnected changes
-
     useEffect(() => {
         const storedUserData = localStorage.getItem('dippiUserData');
         if (storedUserData) {
@@ -125,7 +123,6 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
             countryCode: ""
         });
 
-        // La respuesta de authenticate esta mal tipado en el SDK base
         if ('error' in response) {
             setError(response.message);
             setWaitingResponse(false);
