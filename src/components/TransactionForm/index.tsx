@@ -4,7 +4,7 @@ import SignTransaction from '../SignTransaction';
 import { useDippiContext } from '../../components/DippiProvider';
 import { getCanRetrievePkById } from '../../utils/functions/indexDB';
 import { enc, AES } from 'crypto-js';
-import { setProvider, ProviderPayload } from '../../utils/functions/providers';
+import { setProvider, ProviderPayload, getCurrency } from '../../utils/functions/providers';
 import { transactionDetails, getExplorerUrl } from '../../utils/functions/blockchainTransactions';
 
 export const TransactionForm = (props: ProviderPayload) => {
