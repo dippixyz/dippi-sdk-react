@@ -41,6 +41,8 @@ export const TransactionForm = (props: ProviderPayload) => {
         return null;
     }
 
+    let currency = getCurrency(props._network);
+
     const decryptAndSign = (code: string) => {
         const encryptionKey = code;
 
@@ -240,7 +242,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                             />
                         </div>
                         <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                            <label htmlFor="amount" className="mb-2 text-xs font-bold text-gray-700">Token Amount</label>
+                            <label htmlFor="amount" className="p-2 mb-2 text-base font-bold text-gray-500">{currency+" "}</label>
                             <input
                                 className={`text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${isValidAmount ? 'border-green-500' : 'border-red-500'}`}
                                 id="amount"

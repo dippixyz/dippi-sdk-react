@@ -21,7 +21,7 @@ export type ProviderType =
 
 export interface BaseProps {
   _network: Networkish;
-  currency: string;
+  currency?: string;
 }
 
 export interface AlchemyProviderPayload extends BaseProps {
