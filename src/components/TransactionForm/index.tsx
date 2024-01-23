@@ -8,7 +8,7 @@ import { setProvider, ProviderPayload } from '../../utils/functions/providers';
 import { transactionDetails, getExplorerUrl } from '../../utils/functions/blockchainTransactions';
 
 export const TransactionForm = (props: ProviderPayload) => {
-    const { isConnected, user } = useDippiContext();
+    const { isConnected, user, address } = useDippiContext();
     const [destinationAddress, setDestinationAddress] = useState<string>('');
     const [amount, setAmount] = useState<number>(0);
     const [gasCost, setGasCost] = useState<bigint>(ethers.parseEther('0'));
@@ -27,6 +27,7 @@ export const TransactionForm = (props: ProviderPayload) => {
     const [decryptCodeFlag, setDecryptCodeFlag] = useState<boolean>(false);
     const [code, setCode] = useState<string>('');
     const [openModal, setOpenModal] = useState<boolean>(false);
+    const [walletBalance, setWalletBalance] = useState<ethers.BigNumberish>(0);
     const [showNotification, setShowNotification] = useState<boolean>(false);
     const [notificationText, setNotificationText] = useState<string | JSX.Element>(
         'Your private key has been copied to your clipboard!',
@@ -35,10 +36,18 @@ export const TransactionForm = (props: ProviderPayload) => {
 
     let provider = setProvider(props);
 
+    if (!provider) {
+        return null;
+    }
+
+    provider.getBalance(address).then((balance) => {
+        setWalletBalance(balance);
+    });
+
     const decryptAndSign = (code: string) => {
         const encryptionKey = code;
 
-        const walletId = user?.id || 'clrhtjrjf0000le22h78ksufd';
+        const walletId = user?.id;
         
         if (!walletId) {
             return;
@@ -95,9 +104,6 @@ export const TransactionForm = (props: ProviderPayload) => {
         const value = e.target.value;
         if (typeof value === 'string' && value.match(/^\d*\.?\d*$/) !== null) {
             setAmount(e.target.value);
-            if (destinationAddress.length > 0) {
-                QuoteTransaction(provider);
-            }
         }
     }
 
@@ -120,42 +126,51 @@ export const TransactionForm = (props: ProviderPayload) => {
         }
     };
 
-    const QuoteTransaction = async (provider: ethers.Provider) => {
-        const tx = {
-            to: destinationAddress,
-            value: ethers.parseEther(amount.toString()),
-        };
+    const quoteTransaction = async (provider: ethers.Provider) => {
+        try {
+            const tx = {
+                to: destinationAddress,
+                value: ethers.parseEther(amount.toString()),
+            };
+    
+            setTx(tx);
+    
+            const fee = await provider.getFeeData();
 
-        setTx(tx);
+            setGasCost(fee?.gasPrice || BigInt(0));
+            setGasLimit(fee?.maxFeePerGas || BigInt(0));
+            setTrxTotal(BigInt(gasLimit) + ethers.parseEther(amount.toString()));
+            
+            gasFlag.current = true;
 
-        const fee = await provider.getFeeData();
-        setGasCost(fee?.gasPrice || BigInt(0));
-        setGasLimit(BigInt(gasCost) + BigInt(fee?.maxFeePerGas || 0));
-        setTrxTotal(BigInt(gasLimit) + ethers.parseUnits(amount.toString()));
-        gasFlag.current = true;
-        setTrxDetails({
-            to: destinationAddress,
-            value: ethers.parseEther(amount.toString()),
-            gasCost: gasCost,
-            gasLimit: gasLimit,
-            trxTotal: trxTotal
-        });
+            setTrxDetails({
+                to: destinationAddress,
+                value: ethers.parseEther(amount.toString()),
+                gasCost: gasCost,
+                gasLimit: gasLimit,
+                trxTotal: trxTotal
+            });
+        } catch (error) {
+            console.log('fix your params...');
+        }
     }
 
     useEffect(() => {
         if (provider && amount > 0 && ethers.isAddress(destinationAddress)) {
-            QuoteTransaction(provider)
-            .then((result) => {
-                // Handle the result of QuoteTransaction here
-                console.log(result);
+            quoteTransaction(provider)
+            .then(() => {
+                // Handle the result of quoteTransaction here
+                console.log('quoted trx successfully');
             })
-            .catch((error) => {
+            .catch((error: any) => {
+                console.log('error quoting trx...:', error);
+                
                 // Handle any errors here
-                console.error(error);
+                // console.error(error);
                 setError(error);
             });
         }
-    }, [gasCost, gasLimit, trxTotal, error]);
+    }, [amount, gasCost, gasLimit, trxTotal, error]);
 
     useEffect(() => {
         if (code.length === 4) {
@@ -174,19 +189,35 @@ export const TransactionForm = (props: ProviderPayload) => {
 
     return (
         <>
-            <div className="bg-white rounded-lg p-8 max-w-sm mx-auto my-10">
+            <div className="bg-white rounded-lg p-8 mx-auto my-10 w-full max-w-[400px]">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
                     }}
-                    className="max-w-[480px]"
+                    // className="max-w-[640px]"
                 >
                     <>
                         <h2 className="text-2xl text-gray-700 font-bold mb-4">Send Transaction</h2>
+                        <label htmlFor="from-address" className="mb-2 text-sm font-bold text-gray-700">From</label>
+                        <div className="flex mb-6 items-center shadow appearance-none border rounded">
+                            <input
+                                className="text-xs shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                id="from-address"
+                                name="fromAddress"
+                                type="text"
+                                placeholder="0x000000000000000000000000000000000000000"
+                                value={address}
+                                size={72}
+                                disabled={true}
+                            />
+                        </div>
+                        <div className="text-sm text-gray-700 flex mb-6 items-center appearance-none rounded">
+                            <p><strong>Balance: </strong>{ethers.formatEther(walletBalance.toString())}</p>
+                        </div>
                         <label htmlFor="destination-address" className="mb-2 text-sm font-bold text-gray-700">Destination Address</label>
                         <div className="flex mb-6 items-center shadow appearance-none border rounded">
                             <input
-                                className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                className="text-xs shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="destination-address"
                                 name="destinationAddress"
                                 type="text"
@@ -199,16 +230,19 @@ export const TransactionForm = (props: ProviderPayload) => {
                             />
                         </div>
                         <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                            <label htmlFor="amount" className="mb-2 text-sm font-bold text-gray-700">Token Amount</label>
+                            <label htmlFor="amount" className="mb-2 text-xs font-bold text-gray-700">Token Amount</label>
                             <input
-                                className="text-lg shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                className="text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="amount"
                                 name="amount"
                                 type="number"
-                                placeholder="Token amount 0.00"
+                                placeholder="0.00"
                                 value={amount}
                                 onChange={(e) => {
                                     handleAmountChange(e);
+                                }}
+                                onWheel={(e) => {
+                                    e.preventDefault();
                                 }}
                             />
                         </div>
