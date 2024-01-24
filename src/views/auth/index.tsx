@@ -62,7 +62,7 @@ const AuthenticationView = () => {
                 {
                     !isConnected ?
                         <div className="flex items-center">
-                            <img src="http://localhost:3003/assets/img/logo.png" alt="Dippi Icon" style={{ width: 30, marginRight: 4 }} />
+                            <img src="https://app.dippi.xyz/assets/img/logo.png" alt="Dippi Icon" style={{ width: 30, marginRight: 4 }} />
                             <span>Continue with Dippi</span>
                         </div>
                     :
