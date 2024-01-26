@@ -4,7 +4,7 @@ import SignTransaction from '../SignTransaction';
 import { useDippiContext } from '../../components/DippiProvider';
 import { getCanRetrievePkById } from '../../utils/functions/indexDB';
 import { enc, AES } from 'crypto-js';
-import { setProvider, ProviderPayload } from '../../utils/functions/providers';
+import { setProvider, ProviderPayload, getCurrency } from '../../utils/functions/providers';
 import { transactionDetails, getExplorerUrl } from '../../utils/functions/blockchainTransactions';
 
 export const TransactionForm = (props: ProviderPayload) => {
@@ -34,12 +34,15 @@ export const TransactionForm = (props: ProviderPayload) => {
     );
     const [invalidCode, setInvalidCode] = useState<boolean>(false);
     const [isValidAmount, setIsValidAmount] = useState<boolean>(false);
+    const [isValidAddress, setIsValidAddress] = useState<boolean>(false);
 
     let provider = setProvider(props);
     
     if (!provider) {
         return null;
     }
+
+    let currency = getCurrency(props._network);
 
     const decryptAndSign = (code: string) => {
         const encryptionKey = code;
@@ -197,6 +200,14 @@ export const TransactionForm = (props: ProviderPayload) => {
         }
     }, [amount, walletBalance]);
 
+    useEffect(() => {
+        if (ethers.isAddress(destinationAddress)) {
+            setIsValidAddress(true);
+        } else {
+            setIsValidAddress(false);
+        }
+    }, [destinationAddress]);
+
     return (
         <>
             <div className="bg-white rounded-lg p-8 mx-auto my-10 w-full max-w-[400px]">
@@ -227,7 +238,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                         <label htmlFor="destination-address" className="mb-2 text-sm font-bold text-gray-700">Destination Address</label>
                         <div className="flex mb-6 items-center shadow appearance-none border rounded">
                             <input
-                                className="text-xs shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                className={`text-xs shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${isValidAddress ? 'border-green-500' : 'border-red-500'}`}
                                 id="destination-address"
                                 name="destinationAddress"
                                 type="text"
@@ -240,7 +251,7 @@ export const TransactionForm = (props: ProviderPayload) => {
                             />
                         </div>
                         <div className="flex mb-6 items-center shadow appearance-none border rounded">
-                            <label htmlFor="amount" className="mb-2 text-xs font-bold text-gray-700">Token Amount</label>
+                            <label htmlFor="amount" className="p-2 mb-2 text-base font-bold text-gray-500">{currency+" "}</label>
                             <input
                                 className={`text-sm shadow appearance-none border rounded w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${isValidAmount ? 'border-green-500' : 'border-red-500'}`}
                                 id="amount"
