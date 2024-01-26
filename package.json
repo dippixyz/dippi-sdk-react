@@ -1,6 +1,6 @@
 {
   "name": "@dippixyz/react-sdk",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Dippi React SDK to implement Dippi SDK functionalities.",
   "main": "dist/index.js",
   "files": [
