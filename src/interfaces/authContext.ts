@@ -7,6 +7,11 @@ export interface SignInConnectWalletPayloadType {
     topic: string;
 }
 
+export interface TokenPair {
+    accessToken: string;
+    refreshToken: string;
+}
+
 export interface SignUpPayloadType {
     email: string;
     password: string;
