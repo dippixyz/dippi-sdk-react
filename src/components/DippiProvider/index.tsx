@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Dippi } from '@dippixyz/base';
-import { DippiProviderProps , User} from '../../interfaces/authContext';
+import { DippiProviderProps , User, SignInConnectWalletPayloadType, TokenPair} from '../../interfaces/authContext';
 import { UserDippiResponseBody } from '../../interfaces/users.interface';
 import { ParamsCreateWallet } from '../../interfaces/wallet.interface';
 import { addObjectToDB } from '../../utils/functions/indexDB';
@@ -21,6 +21,10 @@ interface AuthContextType {
     isResetPassword: boolean;
     isChangedPassword: boolean;
     waitingResponse: boolean;
+    handleConnectWallet: (
+        data: SignInConnectWalletPayloadType,
+    ) => Promise<TokenPair>;
+    setTokenPair: (tokenPair: TokenPair | null) => void;
     handleSignIn: (userData: User) => void;
     handleSignUp: (userData: User) => void;
     createWallet: (params: ParamsCreateWallet) => void;
@@ -29,11 +33,14 @@ interface AuthContextType {
     disconnect: () => void;
 }
 
+const ACCESS_TOKEN_KEY = 'dippi-access-token';
+const REFRESH_TOKEN_KEY = 'dippi-refresh-token';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function DippiProvider({ children, config }: DippiProviderProps) {
 
-    const [error , setError] = useState<string>('');
+    const [error, setError] = useState<any>();
     const [user, setUser] = useState<UserDippiResponseBody | null>(null);
     const [address, setAddress] = useState<string>('');
     const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -41,6 +48,9 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
     const [isChangedPassword, setIsChangedPassword] = useState<boolean>(false);
     const [signUpStatus, setSignUpStatus] = useState('initial');
     const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
+    const [tokenPair, setTokenPair] = useState<TokenPair | null>();
 
     useEffect(() => {
         const storedUserData = localStorage.getItem('dippiUserData');
@@ -246,6 +256,85 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
         localStorage.removeItem('dippiUserData');
     };
 
+    const saveTokenPairOnLocalStorage = (tokenPair: TokenPair | null) => {
+        if (!tokenPair) {
+            localStorage.removeItem(ACCESS_TOKEN_KEY);
+            localStorage.removeItem(REFRESH_TOKEN_KEY);
+        } else {
+            const { accessToken, refreshToken } = tokenPair;
+            localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
+            localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+        }
+    };
+
+    const handleConnectWallet = async ({
+        address,
+        walletType,
+        topic,
+    }: SignInConnectWalletPayloadType): Promise<TokenPair> => {
+        setLoading(true);
+
+        const validator = [
+            '',
+            process.env.NEXT_PUBLIC_VALIDATOR_CONNECT_WALLET_1,
+            process.env.NEXT_PUBLIC_VALIDATOR_CONNECT_WALLET_2,
+            process.env.NEXT_PUBLIC_VALIDATOR_CONNECT_WALLET_3,
+            process.env.NEXT_PUBLIC_VALIDATOR_CONNECT_WALLET_4,
+            process.env.NEXT_PUBLIC_VALIDATOR_CONNECT_WALLET_5,
+        ].join('$');
+
+        try {
+            const response = await fetch(
+                `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/connect-wallet`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        address,
+                        walletType,
+                        validator,
+                        topic,
+                    }),
+                },
+            );
+
+            const { message, error, accessToken, refreshToken } =
+                await response.json();
+
+            if (!!error) {
+                if (message instanceof Array) {
+                    setError(message);
+                } else {
+                    setError([message]);
+                }
+                setTokenPair(null);
+                saveTokenPairOnLocalStorage(null);
+            } else {
+                setError(null);
+                setIsSignedIn(true);
+                setTokenPair({ accessToken, refreshToken } as TokenPair);
+                saveTokenPairOnLocalStorage({
+                    accessToken,
+                    refreshToken,
+                } as TokenPair);
+                setLoading(false);
+            }
+            return { accessToken, refreshToken } as TokenPair;
+        } catch (error) {
+            throw new Error(
+                'Error Connect Wallet Address : ' +
+                    address +
+                    ' Error: ' +
+                    error,
+            );
+        } finally {
+            setLoading(false);
+            // saveTokenPairOnLocalStorage(null);
+        }
+    };
+
     return (
         <AuthContext.Provider 
             value={{ 
@@ -262,7 +351,9 @@ export function DippiProvider({ children, config }: DippiProviderProps) {
                 handlePasswordChange,
                 handlePasswordReset,
                 createWallet,
-                disconnect 
+                disconnect,
+                handleConnectWallet,
+                setTokenPair
             }}>
             {children}
         </AuthContext.Provider>
